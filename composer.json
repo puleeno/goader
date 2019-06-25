@@ -1,0 +1,16 @@
+{
+    "name": "puleeno/imownder",
+    "description": "Image downloader supported multi hosts",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Puleeno Nguyen",
+            "email": "puleeno@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    }
+}
