@@ -11,6 +11,13 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "nategood/commando": "dev-master",
+        "voku/php-hooks": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Puleeno\\Imagoader\\": "src/"
+        }
     }
 }
