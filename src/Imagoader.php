@@ -19,6 +19,11 @@ class Imagoader
         return self::$instance;
     }
 
+    public function __construct()
+    {
+        Environment::getInstance();
+    }
+
     public function run()
     {
         $command = Command::getCommand();
@@ -44,7 +49,6 @@ class Imagoader
             array_push($packages, 'Host', 'Imagoader', 'Puleeno');
 
             $package_class = implode('\\', array_reverse($packages));
-
             if (class_exists($package_class)) {
                 $downloader = new $package_class($this->str_url);
                 if (!$downloader instanceof Host) {
@@ -52,6 +56,7 @@ class Imagoader
                         sprintf('Class %s must is instance of %s', $package_class, Host::class)
                     );
                 }
+                $downloader->download();
             }
         }
     }
