@@ -5,6 +5,7 @@ final class Environment
 {
     private static $instance;
 
+    public $goaderDir;
     public $userHomeDir;
     public $workDir;
 
@@ -14,6 +15,7 @@ final class Environment
 
     public function __construct()
     {
+        $this->goaderDir = dirname(GOADER_MAIN_BIN_FILE);
         $this->userHomeDir = getenv('HOME');
         $this->workDir = getcwd();
         $this->currentIndex = 1;

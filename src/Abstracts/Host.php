@@ -8,11 +8,13 @@ use GuzzleHttp\Client;
 abstract class Host implements HostInterface
 {
     protected $url;
+    protected $data;
     protected $content;
 
-    public function __construct($url)
+    public function __construct($url, $data)
     {
         $this->url = $url;
+        $this->data = $data;
     }
 
     public function getContent($url)

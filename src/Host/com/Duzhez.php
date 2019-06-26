@@ -3,10 +3,17 @@ namespace Puleeno\Goader\Host\com;
 
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Hook;
 
 class Duzhez extends Host
 {
     protected $html;
+
+    public static function getCDNHosts()
+    {
+        return Hook::apply_filters('duzhez_image_hosts', array(
+        ));
+    }
 
     public function download()
     {

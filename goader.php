@@ -2,6 +2,7 @@
 <?php
 use Puleeno\Goader\Goader;
 
+define('GOADER_MAIN_BIN_FILE', __FILE__);
 $composer = false;
 
 $searchComposers = array(
