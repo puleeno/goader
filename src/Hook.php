@@ -1,5 +1,5 @@
 <?php
-namespace Puleeno\Imagoader;
+namespace Puleeno\Goader;
 
 use voku\helper\Hooks;
 

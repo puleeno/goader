@@ -1,9 +1,9 @@
 <?php
-namespace Puleeno\Imagoader\Abstracts;
+namespace Puleeno\Goader\Abstracts;
 
 
-use Puleeno\Imagoader\Interfaces\HostInterface;
-use Puleeno\Imagoader\Environment;
+use Puleeno\Goader\Interfaces\HostInterface;
+use Puleeno\Goader\Environment;
 use GuzzleHttp\Client;
 
 abstract class Host implements HostInterface

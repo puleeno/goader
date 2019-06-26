@@ -1,8 +1,8 @@
 <?php
-namespace Puleeno\Imagoader\Host\com;
+namespace Puleeno\Goader\Host\com;
 
-use Puleeno\Imagoader\Environment;
-use Puleeno\Imagoader\Abstracts\Host;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Abstracts\Host;
 
 class Duzhez extends Host
 {

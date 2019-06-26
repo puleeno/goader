@@ -1,6 +1,6 @@
 <?php
 
-namespace Puleeno\Imagoader\Interfaces;
+namespace Puleeno\Goader\Interfaces;
 
 interface HostInterface
 {

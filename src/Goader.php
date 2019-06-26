@@ -1,9 +1,9 @@
 <?php
-namespace Puleeno\Imagoader;
+namespace Puleeno\Goader;
 
-use Puleeno\Imagoader\Abstracts\Host;
+use Puleeno\Goader\Abstracts\Host;
 
-class Imagoader
+class Goader
 {
     protected static $instance;
     protected $str_url;
@@ -39,14 +39,14 @@ class Imagoader
             exit('Please provide the URL that you want to download images');
         }
 
-        $action = Hook::apply_filters('imagoader_downloader',false, $host, $this->url, $this->str_url);
+        $action = Hook::apply_filters('Goader_downloader',false, $host, $this->url, $this->str_url);
         if (is_callable($action)) {
             return call_user_func($action, $host, $this->url, $this->str_url);
         } else {
             $packages = explode('.', $host);
             $packages[0] = ucfirst($packages[0]);
 
-            array_push($packages, 'Host', 'Imagoader', 'Puleeno');
+            array_push($packages, 'Host', 'Goader', 'Puleeno');
 
             $package_class = implode('\\', array_reverse($packages));
             if (class_exists($package_class)) {

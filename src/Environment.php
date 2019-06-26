@@ -1,5 +1,5 @@
 <?php
-namespace Puleeno\Imagoader;
+namespace Puleeno\Goader;
 
 final class Environment
 {
