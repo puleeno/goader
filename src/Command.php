@@ -38,4 +38,12 @@ class Command
     {
         return self::getInstance()->command;
     }
+
+    public static function defaultCommandOptions($command)
+    {
+        $command->option('s')
+            ->aka('sequence')
+            ->describedAs('Naming file with sequence number')
+            ->boolean();
+    }
 }

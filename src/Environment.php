@@ -53,7 +53,7 @@ final class Environment
     public static function supportedHosters()
     {
         $hosts = array(
-            Duzhez::getName() => Duzhez::class
+            Duzhez::NAME => Duzhez::class
         );
         return Hook::apply_filters('goaders', $hosts);
     }

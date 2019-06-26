@@ -5,4 +5,6 @@ namespace Puleeno\Goader\Interfaces;
 interface HostInterface
 {
     public function download();
+
+    public function formatLink($originalLink);
 }

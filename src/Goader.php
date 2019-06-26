@@ -24,13 +24,21 @@ class Goader
 
     public function __construct()
     {
+        // Init environment for Goader
         Environment::getInstance();
+
+        // Setup default options for command line
+        Hook::add_action('goader_setup_command', array(Command::class, 'defaultCommandOptions'));
+
+        // Load goader plugins
         $this->loadPlugins();
     }
 
     public function run()
     {
         $command = Command::getCommand();
+        Hook::do_action('goader_setup_command', $command);
+
         $this->strUrl = $command[0];
         $this->url = parse_url($this->strUrl);
 

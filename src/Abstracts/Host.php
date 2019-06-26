@@ -4,10 +4,11 @@ namespace Puleeno\Goader\Abstracts;
 use Puleeno\Goader\Interfaces\HostInterface;
 use Puleeno\Goader\Environment;
 use GuzzleHttp\Client;
+use Puleeno\Goader\Command;
 
 abstract class Host implements HostInterface
 {
-    private static $name;
+    const NAME = '';
 
     protected $url;
     protected $data;
@@ -21,13 +22,9 @@ abstract class Host implements HostInterface
 
     public function __toString()
     {
-        return $content;
+        return $this->content;
     }
 
-    public static function getName()
-    {
-        return self::$name;
-    }
 
     public function getContent($url)
     {
@@ -53,8 +50,10 @@ abstract class Host implements HostInterface
 
     public function generateFileName($originalName)
     {
-        $name = $originalName;
-        if (true) {
+        $name = basename($originalName);
+        $command = Command::getCommand();
+
+        if ($command['sequence']) {
             $extension = $this->detecttExtension($originalName);
             $currentIndex = Environment::getCurrentIndex();
             $name = sprintf('%s.%s', $currentIndex, $extension);
@@ -65,11 +64,8 @@ abstract class Host implements HostInterface
 
     public function detecttExtension($filename)
     {
-        return 'png';
-    }
-
-    public function formatLink($link)
-    {
-        return sprintf('http://mhimg.9mmc.com:44237/images/comic/371/741960/%s', $link);
+        return pathinfo(
+            $filename, PATHINFO_EXTENSION
+        );
     }
 }
