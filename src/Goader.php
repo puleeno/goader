@@ -56,6 +56,8 @@ class Goader
                     );
                 }
                 $downloader->download();
+            } else {
+                exit(sprintf('We don\'t support host %s', $host));
             }
         }
     }

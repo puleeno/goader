@@ -2,9 +2,22 @@
 <?php
 use Puleeno\Goader\Goader;
 
-$composer = sprintf('%s/vendor/autoload.php', dirname(__FILE__));
+$composer = false;
 
-if (file_exists($composer)) {
+$searchComposers = array(
+    sprintf('%s/vendor/autoload.php', dirname(__FILE__)),
+    sprintf('%s/../../autoload.php', dirname(__FILE__))
+);
+
+foreach ($searchComposers as $searchComposer) {
+    $searchComposers = realpath($searchComposer);
+    if (file_exists($searchComposers)) {
+        $composer = $searchComposers;
+        break;
+    }
+}
+
+if ($composer) {
     require_once $composer;
 }
 
