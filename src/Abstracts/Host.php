@@ -7,6 +7,8 @@ use GuzzleHttp\Client;
 
 abstract class Host implements HostInterface
 {
+    private static $name;
+
     protected $url;
     protected $data;
     protected $content;
@@ -17,9 +19,20 @@ abstract class Host implements HostInterface
         $this->data = $data;
     }
 
+    public function __toString()
+    {
+        return $content;
+    }
+
+    public static function getName()
+    {
+        return self::$name;
+    }
+
     public function getContent($url)
     {
-        $newInstance = new self($url);
+        $currentClass = get_class($this);
+        $newInstance = new $currentClass($this->url, $this->data);
 
         $client = new Client();
         $res = $client->request('GET', $url);
@@ -38,9 +51,16 @@ abstract class Host implements HostInterface
         fclose($h);
     }
 
-    public function generateFileName()
+    public function generateFileName($originalName)
     {
-        return Environment::getCurrentIndex();
+        $name = $originalName;
+        if (true) {
+            $extension = $this->detecttExtension($originalName);
+            $currentIndex = Environment::getCurrentIndex();
+            $name = sprintf('%s.%s', $currentIndex, $extension);
+            Environment::setCurrentIndex(++$currentIndex);
+        }
+        return $name;
     }
 
     public function detecttExtension($filename)
@@ -48,8 +68,8 @@ abstract class Host implements HostInterface
         return 'png';
     }
 
-    public function __toString()
+    public function formatLink($link)
     {
-        return $content;
+        return sprintf('http://mhimg.9mmc.com:44237/images/comic/371/741960/%s', $link);
     }
 }

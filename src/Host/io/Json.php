@@ -7,6 +7,13 @@ class Json extends Host
 {
     public function download()
     {
-        var_dump($this->data);
+        $images = $this->data['json'];
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                $image = $this->formatLink($image);
+                $fileName = $this->generateFileName($image);
+                $this->getContent($image)->saveFile($fileName);
+            }
+        }
     }
 }

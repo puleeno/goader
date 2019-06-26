@@ -1,6 +1,8 @@
 <?php
 namespace Puleeno\Goader;
 
+use Puleeno\Goader\Host\com\Duzhez;
+
 final class Environment
 {
     private static $instance;
@@ -45,6 +47,14 @@ final class Environment
     public static function setCurrentIndex($index)
     {
         $environment = self::getInstance();
-        $environment->currentIndex($index);
+        $environment->currentIndex = $index;
+    }
+
+    public static function supportedHosters()
+    {
+        $hosts = array(
+            Duzhez::getName() => Duzhez::class
+        );
+        return Hook::apply_filters('goaders', $hosts);
     }
 }

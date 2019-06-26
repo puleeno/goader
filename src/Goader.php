@@ -43,7 +43,7 @@ class Goader
             $host = Hook::apply_filters('custom_none_host', $host, $command) ;
 
             if (empty($host)) {
-                exit('Please provide the URL that you want to download images');
+                exit('Please provide the valid URL that you want to download images');
             } else {
                 $this->isCustomHost = true;
             }
