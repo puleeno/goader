@@ -6,8 +6,8 @@ define('GOADER_MAIN_BIN_FILE', __FILE__);
 $composer = false;
 
 $searchComposers = array(
-    sprintf('%s/vendor/autoload.php', dirname(__FILE__)),
-    sprintf('%s/../../autoload.php', dirname(__FILE__))
+    sprintf('%s/../vendor/autoload.php', dirname(__FILE__)),
+    sprintf('%s/../../../autoload.php', dirname(__FILE__))
 );
 
 foreach ($searchComposers as $searchComposer) {
