@@ -22,7 +22,6 @@ class Duzhez extends Host
 
     public function imageFromHTML($html)
     {
-        
     }
 
     public function downloadFirstImage()

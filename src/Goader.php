@@ -11,8 +11,7 @@ class Goader
 
     public static function getInstance()
     {
-        if(is_null(self::$instance))
-        {
+        if (is_null(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -39,7 +38,7 @@ class Goader
             exit('Please provide the URL that you want to download images');
         }
 
-        $action = Hook::apply_filters('Goader_downloader',false, $host, $this->url, $this->str_url);
+        $action = Hook::apply_filters('Goader_downloader', false, $host, $this->url, $this->str_url);
         if (is_callable($action)) {
             return call_user_func($action, $host, $this->url, $this->str_url);
         } else {

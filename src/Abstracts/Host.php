@@ -1,7 +1,6 @@
 <?php
 namespace Puleeno\Goader\Abstracts;
 
-
 use Puleeno\Goader\Interfaces\HostInterface;
 use Puleeno\Goader\Environment;
 use GuzzleHttp\Client;
