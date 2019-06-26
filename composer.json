@@ -12,8 +12,8 @@
     "minimum-stability": "dev",
     "require": {
         "guzzlehttp/guzzle": "~6.0",
-        "nategood/commando": "dev-master",
-        "voku/php-hooks": "dev-master"
+        "nategood/commando": "~0.3.0",
+        "voku/php-hooks": "~0.2.11"
     },
     "autoload": {
         "psr-4": {
