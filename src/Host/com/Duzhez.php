@@ -38,8 +38,8 @@ class Duzhez extends Host
         $this->html = (string)$this->getContent($this->url);
 
         if (preg_match('/chapterPath\s=\s\"([^\"]+)/', $this->html, $matches)) {
-            $this->content = sprintf('goader -h duzhez --path %s console.json', $matches[1]);
-            $this->saveFile('chapter-path.txt');
+            $this->content = sprintf('goader -h duzhez -s --path %s console.json', $matches[1]);
+            $this->saveFile('command.txt');
         }
 
         // $this->downloadFirstImage();
