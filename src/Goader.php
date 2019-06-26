@@ -90,5 +90,7 @@ class Goader
         foreach ((array)$plugins as $plugin) {
             require_once $plugin;
         }
+
+        Hook::do_action('goader_load_plugins');
     }
 }
