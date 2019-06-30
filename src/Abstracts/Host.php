@@ -23,10 +23,17 @@ abstract class Host implements HostInterface
     protected $cookieJar;
     protected $dirPrefix;
 
+    protected $data = array();
+
     public function __construct($url, $host = null)
     {
         $this->url = $url;
-        $this->host = $host;
+        if (empty($host)) {
+            $this->host = parse_url($url);
+        } else {
+            $this->host = $host;
+        }
+
 
         if ($this->useCookie) {
             // $this->loadCookie();
@@ -88,7 +95,14 @@ abstract class Host implements HostInterface
         if ($command['sequence']) {
             $extension = $this->detecttExtension($originalName);
             $currentIndex = Environment::getCurrentIndex();
-            $name = sprintf('%s.%s', $currentIndex, $extension);
+            $fileName = Hook::apply_filters(
+                'image_sequence_file_name',
+                $currentIndex,
+                $currentIndex,
+                $this->data,
+            );
+
+            $name = sprintf('%s.%s', $fileName, $extension);
             Environment::setCurrentIndex(++$currentIndex);
         }
         if (!empty($this->dirPrefix)) {
@@ -106,7 +120,7 @@ abstract class Host implements HostInterface
         );
     }
 
-    protected function dontSupport()
+    protected function doNotSupport()
     {
         exit(sprintf('We do not support download for URL %s', $this->url));
     }

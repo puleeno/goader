@@ -1,10 +1,10 @@
 <?php
 namespace Puleeno\Goader\Hosts\com;
 
-use Puleeno\Goader\Environment;
 use Puleeno\Goader\Abstracts\Host;
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Command;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Hook;
 
 class Duzhez extends Host
 {

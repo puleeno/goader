@@ -35,6 +35,8 @@ class Goader
     {
         Logger::info();
 
+        Hook::do_action('goader_init');
+
         /**
          * Setup the command to run by Goader
          */

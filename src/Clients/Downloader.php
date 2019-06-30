@@ -8,6 +8,7 @@ class Downloader
 {
     protected $url;
     protected $host;
+    protected $isCustomHost;
 
     public function __construct($url)
     {

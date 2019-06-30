@@ -1,10 +1,11 @@
 <?php
 namespace Puleeno\Goader\Hosts\info;
 
+use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
 use Puleeno\Goader\Abstracts\Host;
-use GuzzleHttp\Client;
 use Puleeno\Goader\Hook;
+use Cocur\Slugify\Slugify;
 
 class TruyenDoc extends Host
 {
@@ -84,6 +85,13 @@ class TruyenDoc extends Host
     {
         $this->content = (string)$this->getContent();
         $this->dom->load($this->content);
+
+        if (!empty($this->dirPrefix)) {
+            $slugify = new Slugify();
+            $chapterArr = explode('/', trim($this->host['path'], '/'));
+            $chapter_name = end($chapterArr);
+            $this->data['file_name_prefix'] = $slugify->slugify($chapter_name);
+        }
 
         $images = $this->dom->find('.main_content_read img');
 

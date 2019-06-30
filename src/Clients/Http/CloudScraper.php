@@ -1,9 +1,9 @@
 <?php
 namespace Puleeno\Goader\Clients\Http;
 
-use Puleeno\Goader\Interfaces\Http\ClientInterface;
-use Puleeno\Goader\Environment;
 use Puleeno\Goader\Clients\Http\Response;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Interfaces\Http\ClientInterface;
 
 class CloudScraper implements ClientInterface
 {
