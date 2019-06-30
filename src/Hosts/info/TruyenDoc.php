@@ -86,10 +86,11 @@ class TruyenDoc extends Host
         $this->content = (string)$this->getContent();
         $this->dom->load($this->content);
 
-        if (!empty($this->dirPrefix)) {
+        $chapterArr = explode('/', trim($this->host['path'], '/'));
+        $chapter_name = end($chapterArr);
+
+        if ($chapter_name) {
             $slugify = new Slugify();
-            $chapterArr = explode('/', trim($this->host['path'], '/'));
-            $chapter_name = end($chapterArr);
             $this->data['file_name_prefix'] = $slugify->slugify($chapter_name);
         }
 
