@@ -22,7 +22,7 @@ function detect_json_file_download($host, $command)
     }
 }
 
-Hook::add_filter('goaders', function($hosts){
+Hook::add_filter('goaders', function ($hosts) {
     return array_merge($hosts, array(
         'json' => Json::class
     ));
@@ -32,7 +32,7 @@ Hook::add_action('goader_setup_command', function ($command) {
     $command->option('h')
         ->aka('host')
         ->describedAs('Integrate with host configs via option')
-        ->must(function($supportedHost){
+        ->must(function ($supportedHost) {
             $supportedHosts = array_keys(Environment::supportedHosters());
             return in_array($supportedHost, $supportedHosts);
         });
