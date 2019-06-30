@@ -1,11 +1,13 @@
 <?php
 namespace Puleeno\Goader\Hosts\info;
 
+use Cocur\Slugify\Slugify;
 use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Hook;
-use Cocur\Slugify\Slugify;
+use Puleeno\Goader\Logger;
+use Puleeno\Goader\Environment;
 
 class TruyenDoc extends Host
 {
@@ -74,11 +76,17 @@ class TruyenDoc extends Host
             );
         }
         $chapters = array_reverse($chapters);
+        Logger::log(sprintf('This manga has %d chapters', count($chapters)));
+        Logger::log('Downloading...');
 
         foreach ($chapters as $chapter) {
+            // Reset current index to 1 to start download the new chapter
+            Environment::setCurrentIndex(1);
+
             $chapter_downloader = new self($chapter['chapter_link']);
             $chapter_downloader->download($chapter['chapter_text']);
         }
+        Logger::log('The manga is downloaded successfully!!');
     }
 
     public function downloadChapter()
@@ -95,14 +103,27 @@ class TruyenDoc extends Host
         }
 
         $images = $this->dom->find('.main_content_read img');
+        $total_images = count($images);
+        if ($this->dirPrefix) {
+            Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
+        } else {
+            Logger::log(sprintf('This chapter has %s images', $total_images));
+        }
 
-        if (count($images)) {
+
+        if ($total_images > 0) {
             $httpClient = new Client();
-            foreach ($images as $image) {
+            foreach ($images as $index => $image) {
                 $image_url = $this->formatLink($image->getAttribute('src'));
                 $fileName = $this->generateFileName($image_url);
+                Logger::log(sprintf('The image %s is downloading...', $index + 1));
 
                 $this->getContent($image_url, $httpClient)->saveFile($fileName);
+            }
+            if ($this->dirPrefix) {
+                Logger::log(sprintf('The %s is downloaded', strtolower($this->dirPrefix)));
+            } else {
+                Logger::log(sprintf('The chapter is downloaded successfully!!'));
             }
             unset($images);
         }

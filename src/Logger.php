@@ -63,5 +63,3 @@ class Logger
         fclose($h);
     }
 }
-
-class_alias(Logger::class, 'Logger', true);
