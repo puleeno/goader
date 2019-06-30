@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a706446259c1f5caf4250219ede417b",
+    "content-hash": "8e9ca69f684b506bdbcdb256c5eeab8f",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -293,7 +293,7 @@
         },
         {
             "name": "paquettg/php-html-parser",
-            "version": "dev-master",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paquettg/php-html-parser.git",
@@ -534,9 +534,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "paquettg/php-html-parser": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
