@@ -1,10 +1,10 @@
 <?php
-namespace Puleeno\Goader\Host\io;
+namespace Puleeno\Goader\Hosts\io;
 
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
-use Puleeno\Goader\Command;
 
 class Json extends Host
 {

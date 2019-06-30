@@ -1,5 +1,5 @@
 <?php
-namespace Puleeno\Goader\Host\com;
+namespace Puleeno\Goader\Hosts\com;
 
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Abstracts\Host;
