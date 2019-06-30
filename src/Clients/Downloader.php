@@ -46,7 +46,7 @@ class Downloader
                 $package_class = $host;
             }
             if (class_exists($package_class)) {
-                $downloader = new $package_class($this->url);
+                $downloader = new $package_class($this->url, $this->host);
                 if (!$downloader instanceof Host) {
                     throw new \Exception(
                         sprintf('Class %s must is instance of %s', $package_class, Host::class)

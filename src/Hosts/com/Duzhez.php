@@ -14,10 +14,18 @@ class Duzhez extends Host
     protected $chapterID;
     protected $chapterPath;
 
-    public function __construct($url, $data)
+    public function __construct($url, $host = null)
     {
-        parent::__construct($url, $data);
+        parent::__construct($url, $host);
+    }
 
+    public static function getCDNHost()
+    {
+        return Hook::apply_filters('duzhez_image_host', 'http://mhimg.9mmc.com:44237');
+    }
+
+    public function download($directoryName = null)
+    {
         $command = Command::getCommand();
         if ($command['chapter']) {
             $this->chapterID = $command['chapter'];
@@ -26,19 +34,11 @@ class Duzhez extends Host
         if ($command['path']) {
             $this->chapterPath = $command['path'];
         }
-    }
 
-    public static function getCDNHost()
-    {
-        return Hook::apply_filters('duzhez_image_host', 'http://mhimg.9mmc.com:44237');
-    }
-
-    public function download()
-    {
         $this->html = (string)$this->getContent($this->url);
 
         if (preg_match('/chapterPath\s=\s\"([^\"]+)/', $this->html, $matches)) {
-            $this->content = sprintf('goader -h duzhez -s --path %s console.json', $matches[1]);
+            $this->content = sprintf('goader download -h duzhez -s --path %s console.json', $matches[1]);
             $this->saveFile('command.txt');
         }
 

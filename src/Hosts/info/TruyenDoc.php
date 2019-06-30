@@ -36,10 +36,12 @@ class TruyenDoc extends Host
         return false;
     }
 
-    public function download()
+    public function download($directoryName = null)
     {
         $this->dom = new Dom();
-
+        if (!empty($directoryName)) {
+            $this->dirPrefix = $directoryName;
+        }
         $page = $this->checkPageType();
         if ($page === false) {
             $this->dontSupport();
@@ -54,11 +56,33 @@ class TruyenDoc extends Host
 
     public function downloadManga()
     {
+        $this->content = (string)$this->getContent();
+        $this->dom->load($this->content);
+
+        $domChapters = $this->dom->find('.list_chapter_comic ul.list_chapter a');
+        $chapters = array();
+        foreach ($domChapters as $chapter) {
+            $chapters[] = array(
+                'chapter_link' => sprintf(
+                    '%1$s://%2$s%3$s',
+                    $this->host['scheme'],
+                    $this->host['host'],
+                    $chapter->getAttribute('href')
+                ),
+                'chapter_text' => $chapter->text
+            );
+        }
+        $chapters = array_reverse($chapters);
+
+        foreach ($chapters as $chapter) {
+            $chapter_downloader = new self($chapter['chapter_link']);
+            $chapter_downloader->download($chapter['chapter_text']);
+        }
     }
 
-    public function downloadChapter($folderName = null)
+    public function downloadChapter()
     {
-        $this->content = $this->getContent($this->url);
+        $this->content = (string)$this->getContent();
         $this->dom->load($this->content);
 
         $images = $this->dom->find('.main_content_read img');
@@ -67,11 +91,9 @@ class TruyenDoc extends Host
             $httpClient = new Client();
             foreach ($images as $image) {
                 $image_url = $this->formatLink($image->getAttribute('src'));
-
                 $fileName = $this->generateFileName($image_url);
-                $httpClient->get($image_url, [
-                    'save_to' => $fileName
-                ]);
+
+                $this->getContent($image_url, $httpClient)->saveFile($fileName);
             }
             unset($images);
         }

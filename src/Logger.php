@@ -10,7 +10,7 @@ class Logger
     public static function __callStatic($name, $args)
     {
         if (in_array($name, array('log', 'info', 'warning', 'success', 'error'))) {
-            if (!empty($args[0])) {
+            if ($name !== 'log' && !empty($args[0])) {
                 $message = $args[0];
                 $args[0] = sprintf('[%s]%s%s', strtoupper($name), date("yyyy-MM-dd'T'HH:mm:ss*SSSZZZZ"));
 
@@ -19,10 +19,18 @@ class Logger
                 }
                 $args[0] .= $message;
             }
-            call_user_func_array(array($this, 'write'), $args);
+            call_user_func_array(array(self::instance(), 'write'), $args);
         } else {
             throw new \Exception('Method %s::%s() is not defined', Logger::class, $name);
         }
+    }
+
+    public static function instance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 
     public function __construct()
@@ -39,7 +47,14 @@ class Logger
         );
     }
 
-    public function write($message)
+    public function write($message = '')
+    {
+        if ($message) {
+            echo $message . PHP_EOL;
+        }
+    }
+
+    public function writeLogFile($message)
     {
         $logFile = $this->checkLogFile();
         $h = fopen($logFile, 'w+');
@@ -48,3 +63,5 @@ class Logger
         fclose($h);
     }
 }
+
+class_alias(Logger::class, 'Logger', true);

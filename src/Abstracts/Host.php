@@ -8,21 +8,25 @@ use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Interfaces\HostInterface;
+use Puleeno\Goader\Slug;
 
 abstract class Host implements HostInterface
 {
     const NAME = '';
 
     protected $url;
+    protected $host;
     protected $content;
 
     protected $useCookie = false;
     protected $useCloudScraper = false;
     protected $cookieJar;
+    protected $dirPrefix;
 
-    public function __construct($url)
+    public function __construct($url, $host = null)
     {
         $this->url = $url;
+        $this->host = $host;
 
         if ($this->useCookie) {
             // $this->loadCookie();
@@ -35,8 +39,12 @@ abstract class Host implements HostInterface
     }
 
 
-    public function getContent($url, $method = 'GET', $client = null, $options = array())
+    public function getContent($url = '', $client = null, $method = 'GET', $options = array())
     {
+        if (empty($url)) {
+            $url = $this->url;
+        }
+
         $currentClass = get_class($this);
         $newInstance = new $currentClass($url);
 
@@ -64,6 +72,9 @@ abstract class Host implements HostInterface
 
     public function saveFile($filePath)
     {
+        if (is_int(strpos($filePath, '/')) && !file_exists($dir = dirname($filePath))) {
+            mkdir($dir, 0755, true);
+        }
         $h = fopen($filePath, 'w');
         fwrite($h, $this->content);
         fclose($h);
@@ -80,6 +91,10 @@ abstract class Host implements HostInterface
             $name = sprintf('%s.%s', $currentIndex, $extension);
             Environment::setCurrentIndex(++$currentIndex);
         }
+        if (!empty($this->dirPrefix)) {
+            $name = trim($this->dirPrefix) . '/' . $name;
+        }
+
         return $name;
     }
 
@@ -106,5 +121,10 @@ abstract class Host implements HostInterface
         );
 
         return $cookieFile;
+    }
+
+    public function getDirPrefix()
+    {
+        return $this->dirPrefix;
     }
 }

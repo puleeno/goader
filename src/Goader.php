@@ -2,6 +2,7 @@
 namespace Puleeno\Goader;
 
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Logger;
 
 class Goader
 {
@@ -32,6 +33,8 @@ class Goader
 
     public function run()
     {
+        Logger::info();
+
         /**
          * Setup the command to run by Goader
          */
