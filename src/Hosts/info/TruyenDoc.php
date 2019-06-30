@@ -3,7 +3,6 @@ namespace Puleeno\Goader\Hosts\info;
 
 use Cocur\Slugify\Slugify;
 use GuzzleHttp\Client;
-use PHPHtmlParser\Dom;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
@@ -41,7 +40,6 @@ class TruyenDoc extends Host
 
     public function download($directoryName = null)
     {
-        $this->dom = new Dom();
         if (!empty($directoryName)) {
             $this->dirPrefix = $directoryName;
         }

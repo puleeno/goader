@@ -3,6 +3,7 @@ namespace Puleeno\Goader\Abstracts;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
+use PHPHtmlParser\Dom;
 use Puleeno\Goader\Clients\Http\Cloudscraper;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
@@ -22,6 +23,7 @@ abstract class Host implements HostInterface
     protected $useCloudScraper = false;
     protected $cookieJar;
     protected $dirPrefix;
+    protected $dom;
 
     protected $data = array();
 
@@ -34,6 +36,7 @@ abstract class Host implements HostInterface
             $this->host = $host;
         }
 
+        $this->dom = new Dom();
 
         if ($this->useCookie) {
             // $this->loadCookie();
