@@ -1,0 +1,28 @@
+{
+  "name": "goader",
+  "version": "1.0.0",
+  "description": "Command line downloader written in PHP support multi host",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/puleeno/goader.git"
+  },
+  "keywords": [
+    "downloader",
+    "multi-host"
+  ],
+  "author": "Puleeno Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/puleeno/goader/issues"
+  },
+  "homepage": "https://github.com/puleeno/goader#readme",
+  "dependencies": {
+    "cloudscraper": "^4.1.2",
+    "commander": "^2.20.0",
+    "request": "^2.88.0"
+  }
+}
