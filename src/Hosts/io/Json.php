@@ -1,6 +1,7 @@
 <?php
 namespace Puleeno\Goader\Hosts\io;
 
+use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
@@ -22,14 +23,15 @@ class Json extends Host
         return sprintf('%1$s%2$s', $prefix, $originalLink);
     }
 
-    public function download()
+    public function download($directoryName = null)
     {
-        $images = $this->data['json'];
+        $images = json_decode(file_get_contents($this->host['path']));
         if (!empty($images)) {
+            $httpClient = new Client();
             foreach ($images as $image) {
                 $image = $this->formatLink($image);
                 $fileName = $this->generateFileName($image);
-                $this->getContent($image)->saveFile($fileName);
+                $this->getContent($image, $httpClient)->saveFile($fileName);
             }
         }
     }

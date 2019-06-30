@@ -6,6 +6,7 @@ use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 
+
 class Duzhez extends Host
 {
     const NAME = 'duzhez';
@@ -72,8 +73,13 @@ class Duzhez extends Host
 
     public function formatLink($originalLink)
     {
-        if (empty($this->chapterPath)) {
-            exit('Please input Duzhez chapter path to download images');
+        if (is_null($this->chapterPath)) {
+            $command = Command::getCommand();
+            if ($command['path']) {
+                $this->chapterPath = $command['path'];
+            } else {
+                exit('Please input Duzhez chapter path to download images');
+            }
         }
         $link = sprintf(
             '%s/%s/%s',
@@ -82,6 +88,6 @@ class Duzhez extends Host
             $originalLink
         );
 
-        return Hook::apply_filters( self::NAME . '_format_link', $link, $this->chapterPath, $originalLink);
+        return Hook::apply_filters(self::NAME . '_format_link', $link, $this->chapterPath, $originalLink);
     }
 }

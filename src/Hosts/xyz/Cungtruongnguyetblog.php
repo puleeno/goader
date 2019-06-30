@@ -7,17 +7,32 @@ use Puleeno\Goader\Logger;
 
 class Cungtruongnguyetblog extends Host
 {
+    protected $chapterPatterns = array('chap', 'chapter', 'chuong');
+
     public function download($directoryName = null)
     {
-        // https://cungtruongnguyetblog.xyz/luc-binh-lam-lang/
-        $detectPatt = '/xyz\/(.+)-(chap|chapter|chuong)-(\d{1,})\/?$/';
+        $detectPatt = sprintf('/xyz\/(.+)-(%s)-(\d{1,})\/?$/', implode('|', $this->chapterPatterns));
         if (preg_match($detectPatt, $this->url, $matches)) {
             $this->data['file_name_prefix'] = sprintf('%s-chap-%d', $matches[1], $matches[3]);
             $this->downloadChapter();
         } else {
-            exit(
-                sprintf('Sorry! We do not support URL with this format %s', $this->url)
-            );
+            $isManga = false;
+            foreach ($this->chapterPatterns as $pattern) {
+                $client = new Client();
+                $try_uri = sprintf('%s-%s-1', $this->url, $pattern);
+                $response = $client->head($try_uri);
+                if ($response->getStatusCode()> 199 && $response->getStatusCode() < 300) {
+                    $isManga = true;
+                    break;
+                }
+            }
+            if ($isManga) {
+                $this->downloadManga($pattern);
+            } else {
+                exit(
+                    sprintf('Sorry! We do not support URL with this format %s', $this->url)
+                );
+            }
         }
     }
 
@@ -54,8 +69,9 @@ class Cungtruongnguyetblog extends Host
         Logger::log('The manga chapter is downloaded successfully');
     }
 
-    public function downloadManga()
+    public function downloadManga($pattern)
     {
+        $currentChapter = 1;
         exit(
             sprintf('Currently, We do not support download full manga chapter for %s', $this->host['host'])
         );

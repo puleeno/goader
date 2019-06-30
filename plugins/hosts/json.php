@@ -7,7 +7,8 @@ Hook::add_action('goader_init', function () {
     Hook::add_filter('custom_none_host', 'detect_json_file_download', 10, 2);
     function detect_json_file_download($host, $command)
     {
-        $jsonFile = $command[0];
+        $jsonFile = $command[1];
+
         if (!file_exists($jsonFile)) {
             return $host;
         }
