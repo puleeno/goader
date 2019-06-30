@@ -1,23 +1,32 @@
 <?php
 namespace Puleeno\Goader\Abstracts;
 
-use Puleeno\Goader\Interfaces\HostInterface;
-use Puleeno\Goader\Environment;
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\FileCookieJar;
+use Puleeno\Goader\Clients\Http\Cloudscraper;
 use Puleeno\Goader\Command;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Hook;
+use Puleeno\Goader\Interfaces\HostInterface;
 
 abstract class Host implements HostInterface
 {
     const NAME = '';
 
     protected $url;
-    protected $data;
     protected $content;
 
-    public function __construct($url, $data)
+    protected $useCookie = false;
+    protected $useCloudScraper = false;
+    protected $cookieJar;
+
+    public function __construct($url)
     {
         $this->url = $url;
-        $this->data = $data;
+
+        if ($this->useCookie) {
+            // $this->loadCookie();
+        }
     }
 
     public function __toString()
@@ -26,13 +35,25 @@ abstract class Host implements HostInterface
     }
 
 
-    public function getContent($url)
+    public function getContent($url, $method = 'GET', $client = null, $options = array())
     {
         $currentClass = get_class($this);
-        $newInstance = new $currentClass($this->url, $this->data);
+        $newInstance = new $currentClass($url);
 
-        $client = new Client();
-        $res = $client->request('GET', $url);
+        if (is_null($client)) {
+            if (empty($this->useCloudScraper)) {
+                $client = new Cloudscraper();
+            } else {
+                $client = new Client();
+            }
+            $client->setUserAgent('User-Agent: Mozilla/5.0 (Linux; U; Android 4.3; EN; C6502 Build/10.4.1.B.0.101) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 PlayStation App/1.60.5/EN/EN');
+        }
+
+        $res = $client->request(
+            $method,
+            $url,
+            $options
+        );
 
         if ($res->getStatusCode() < 400) {
             $newInstance->content = (string)$res->getBody();
@@ -65,7 +86,25 @@ abstract class Host implements HostInterface
     public function detecttExtension($filename)
     {
         return pathinfo(
-            $filename, PATHINFO_EXTENSION
+            $filename,
+            PATHINFO_EXTENSION
         );
+    }
+
+    protected function dontSupport()
+    {
+        exit(sprintf('We do not support download for URL %s', $this->url));
+    }
+
+    public function getCookieJarFile()
+    {
+        $cookieFileName = ltrim(get_class($this), 'Puleeno\Goader\Hosts\\');
+        $cookieFile = sprintf(
+            '%s/%s.cookie',
+            Environment::getCookiesDir(),
+            strtolower(str_replace('\\', '.', $cookieFileName))
+        );
+
+        return $cookieFile;
     }
 }

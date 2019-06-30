@@ -1,12 +1,17 @@
 <?php
 namespace Puleeno\Goader\Clients\Http;
 
-class CloudScraper
+use Puleeno\Goader\Interfaces\Http\ClientInterface;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Clients\Http\Response;
+
+class CloudScraper implements ClientInterface
 {
     protected $binFile;
     protected $nodeBinary;
+    protected $options = [];
 
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         $this->bindFile = $this->getBinary();
         $this->nodeBinary = $this->getNodeBinary();
@@ -14,7 +19,7 @@ class CloudScraper
 
     public function getNodeBinary()
     {
-        if (empty($node = getnev('GLOADER_NODE_BINARY'))) {
+        if (empty($node = getenv('GLOADER_NODE_BINARY'))) {
             return 'node';
         }
         return $node;
@@ -40,7 +45,7 @@ class CloudScraper
             }
         }
         return sprintf(
-            '%s %s %s',
+            '%s "%s" %s',
             $this->getNodeBinary(),
             $this->getBinary(),
             ltrim($command)
@@ -49,13 +54,25 @@ class CloudScraper
 
     public function executeCommand($command)
     {
-        passthru($command);
+        exec($command, $output);
+        return implode("\n", $output);
     }
 
-    public function request($method, $url)
+    public function request($method, $uri = '', $options = [])
     {
         $commandArgs = array();
+
+        $commandArgs['method'] = $method;
+        $commandArgs[] = $uri;
+
         $command = $this->buildCommand($commandArgs);
-        $this->executeCommand($command);
+        $body = $this->executeCommand($command);
+
+        $res = new Response($body, 200);
+        return $res;
+    }
+
+    public function setUserAgent($agent)
+    {
     }
 }

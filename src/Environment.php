@@ -1,7 +1,7 @@
 <?php
 namespace Puleeno\Goader;
 
-use Puleeno\Goader\Host\com\Duzhez;
+use Puleeno\Goader\Hosts\com\Duzhez;
 
 final class Environment
 {
@@ -17,11 +17,12 @@ final class Environment
 
     public function __construct()
     {
-        $this->goaderDir = dirname(GOADER_MAIN_BIN_FILE);
+        $goaderBinDir = dirname(GOADER_MAIN_BIN_FILE);
+
+        $this->goaderDir = dirname($goaderBinDir);
         $this->userHomeDir = getenv('HOME');
         $this->workDir = getcwd();
         $this->currentIndex = 1;
-        // $this->fileName = Command::option('t')
     }
 
     public static function getInstance()
@@ -56,5 +57,32 @@ final class Environment
             Duzhez::NAME => Duzhez::class
         );
         return Hook::apply_filters('goaders', $hosts);
+    }
+
+    public static function getUserGoaderDir()
+    {
+        return sprintf(
+            '%s/.goader',
+            self::userHomeDir()
+        );
+    }
+
+    public static function getCookiesDir()
+    {
+        return sprintf('%s/cookies', self::getUserGoaderDir());
+    }
+
+    public static function getCommandArgs()
+    {
+        if (empty($_SERVER['argv'])) {
+            return [];
+        }
+        $args = $_SERVER['argv'];
+
+        /**
+         * Remove file name in args
+         */
+        array_shift($args);
+        return $args;
     }
 }

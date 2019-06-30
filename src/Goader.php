@@ -5,13 +5,9 @@ use Puleeno\Goader\Abstracts\Host;
 
 class Goader
 {
+    const GOADER_COMMAND = 'goader';
+
     protected static $instance;
-    private $isCustomHost;
-
-    protected $strUrl;
-    protected $url;
-
-    public $data = array();
 
     public static function getInstance()
     {
@@ -30,75 +26,54 @@ class Goader
         // Setup default options for command line
         Hook::add_action('goader_setup_command', array(Command::class, 'defaultCommandOptions'));
 
-        // Load goader plugins
+        // Load the plugins to integrate with Goader
         $this->loadPlugins();
     }
 
     public function run()
     {
+        /**
+         * Setup the command to run by Goader
+         */
         $command = Command::getCommand();
         Hook::do_action('goader_setup_command', $command);
 
-        $this->strUrl = $command[0];
-        $this->url = parse_url($this->strUrl);
+        // Detect command via Goader core or Goader
+        $commandArgs = Environment::getCommandArgs();
+        $runner = Hook::apply_filters('register_goader_command', null, $commandArgs, $command);
 
-        if (isset($this->url['host'])) {
-            $this->url['host'] = ltrim($this->url['host'], 'www.');
-        }
+        // Check is runner is registered
+        if (is_callable($runner)) {
+            // Setup goader environment before run command
+            Hook::do_action('setup_goader_environment', $this);
 
-        $host = isset($this->url['host']) ? $this->url['host'] : '';
-        if (empty($host)) {
-            $host = Hook::apply_filters('custom_none_host', $host, $command) ;
-
-            if (empty($host)) {
-                exit('Please provide the valid URL that you want to download images');
-            } else {
-                $this->isCustomHost = true;
-            }
-        }
-
-        // Setup goader environment before run command
-        Hook::do_action('setup_goader_environment', $this);
-
-        $action = Hook::apply_filters('goader_downloader', false, $host, $this->url, $this->strUrl);
-        if (is_callable($action)) {
-            return call_user_func($action, $host, $this->url, $this->strUrl, $this->data);
+            call_user_func($runner, $command);
         } else {
-            if (empty($this->isCustomHost)) {
-                $packages = explode('.', $host);
-                $packages[0] = ucfirst($packages[0]);
-
-                array_push($packages, 'Host', 'Goader', 'Puleeno');
-                $packages =  array_reverse($packages);
-
-                $package_class = implode('\\', $packages);
-            } else {
-                $package_class = $host;
-            }
-
-            if (class_exists($package_class)) {
-                $downloader = new $package_class($this->strUrl, $this->data);
-                if (!$downloader instanceof Host) {
-                    throw new \Exception(
-                        sprintf('Class %s must is instance of %s', $package_class, Host::class)
-                    );
-                }
-                $downloader->download();
-            } else {
-                exit(sprintf('We don\'t support host %s', $host));
-            }
+            $this->doNotSupportCommand($command[0]);
         }
+    }
+
+    public function doNotSupportCommand($command)
+    {
+        if (empty($command)) {
+            $message = sprintf('Please type command `%s --help` to get help', self::GOADER_COMMAND);
+        } else {
+            $message = sprintf('The command %s is not support', $command);
+        }
+
+        exit($message);
     }
 
     protected function loadPlugins()
     {
-        $goaderDir = Environment::getGoaderDir();
-        $plugins = glob(sprintf('%s/plugins/*.php', $goaderDir));
+        Hook::do_action('goader_load_plugins');
 
+        $goaderDir = Environment::getGoaderDir();
+        $plugins = glob(sprintf('%s/plugins/{*,*/*}.php', $goaderDir), GLOB_BRACE);
         foreach ((array)$plugins as $plugin) {
             require_once $plugin;
         }
 
-        Hook::do_action('goader_load_plugins');
+        Hook::do_action('goader_loaded_plugins');
     }
 }

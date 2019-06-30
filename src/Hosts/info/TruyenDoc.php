@@ -3,7 +3,8 @@ namespace Puleeno\Goader\Hosts\info;
 
 use PHPHtmlParser\Dom;
 use Puleeno\Goader\Abstracts\Host;
-
+use GuzzleHttp\Client;
+use Puleeno\Goader\Hook;
 
 class TruyenDoc extends Host
 {
@@ -57,15 +58,37 @@ class TruyenDoc extends Host
 
     public function downloadChapter($folderName = null)
     {
-        $this->content = $this->getContent($this->url, ["allow_redirects" => false]);
+        $this->content = $this->getContent($this->url);
         $this->dom->load($this->content);
 
         $images = $this->dom->find('.main_content_read img');
 
-        var_dump($images);die;
+        if (count($images)) {
+            $httpClient = new Client();
+            foreach ($images as $image) {
+                $image_url = $this->formatLink($image->getAttribute('src'));
+
+                $fileName = $this->generateFileName($image_url);
+                $httpClient->get($image_url, [
+                    'save_to' => $fileName
+                ]);
+            }
+            unset($images);
+        }
     }
 
     public function formatLink($originalUrl)
     {
+        $link = $originalUrl;
+
+        $pre = Hook::apply_filters('truyendoc_filter_image_link', false, $link);
+        if ($pre) {
+            return $pre;
+        }
+
+        if (preg_match('/url=(https?.+.\w{1,4})/', $link, $matches)) {
+            $link = $matches[1];
+        }
+        return $link;
     }
 }
