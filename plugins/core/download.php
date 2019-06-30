@@ -7,8 +7,8 @@ function goader_core_register_download_command($runner, $args, $command)
     if (empty($args)) {
         return $runner;
     }
-    $command = array_shift($args);
     $maybeUrl = end($args);
+    $command = array_shift($args);
 
     if ($command === 'download' || preg_match('/^https?:\/\//', $maybeUrl)) {
         $downloader = new Downloader($maybeUrl);
