@@ -15,7 +15,8 @@
         "guzzlehttp/guzzle": "~6.0",
         "nategood/commando": "~0.3.0",
         "voku/php-hooks": "~0.2.11",
-        "paquettg/php-html-parser": "^2.0.2"
+        "paquettg/php-html-parser": "^2.0.2",
+        "cocur/slugify": "^3.2"
     },
     "autoload": {
         "psr-4": {
