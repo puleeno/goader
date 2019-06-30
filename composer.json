@@ -14,12 +14,18 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "nategood/commando": "~0.3.0",
-        "voku/php-hooks": "~0.2.11"
+        "voku/php-hooks": "~0.2.11",
+        "paquettg/php-html-parser": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "Puleeno\\Goader\\": "src/"
         }
     },
-    "bin": "bin/goader"
+    "bin": "bin/goader",
+    "scripts": {
+        "post-install-cmd": [
+            "npm install"
+        ]
+    }
 }

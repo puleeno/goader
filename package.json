@@ -1,6 +1,6 @@
 {
   "name": "goader",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "Command line downloader written in PHP support multi host",
   "main": "index.js",
   "scripts": {
