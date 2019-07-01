@@ -1,6 +1,6 @@
 {
     "name": "puleeno/goader",
-    "description": "Image downloader supported multi hosts",
+    "description": "Command line downloader written in PHP support multi host",
     "type": "project",
     "license": "MIT",
     "version": "0.2.1",
