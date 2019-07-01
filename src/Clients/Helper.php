@@ -5,6 +5,5 @@ class Helper
 {
     public function show()
     {
-        echo 'Helper';
     }
 }

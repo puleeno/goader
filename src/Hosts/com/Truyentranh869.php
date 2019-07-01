@@ -29,7 +29,6 @@ class Truyentranh869 extends Host
 
     public function downloadChapter()
     {
-        echo 'zo';
         $this->content = $this->getContent();
         var_dump((string)$this->content);
     }

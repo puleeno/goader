@@ -47,8 +47,6 @@ class Goader
         $commandArgs = Environment::getCommandArgs();
         $runner = Hook::apply_filters('register_goader_command', null, $commandArgs, $command);
 
-        var_dump($runner);
-
         // Check is runner is registered
         if (is_callable($runner)) {
             // Setup goader environment before run command
