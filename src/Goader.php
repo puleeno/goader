@@ -47,6 +47,8 @@ class Goader
         $commandArgs = Environment::getCommandArgs();
         $runner = Hook::apply_filters('register_goader_command', null, $commandArgs, $command);
 
+        var_dump($runner);
+
         // Check is runner is registered
         if (is_callable($runner)) {
             // Setup goader environment before run command
@@ -61,7 +63,7 @@ class Goader
     public function doNotSupportCommand($command)
     {
         if (empty($command)) {
-            $message = sprintf('Please type command `%s --help` to get help', self::GOADER_COMMAND);
+            $message = sprintf('Please type command `%s --help` to get the help', self::GOADER_COMMAND);
         } else {
             $message = sprintf('The command %s is not support', $command);
         }

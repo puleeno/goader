@@ -4,7 +4,7 @@ use Puleeno\Goader\Hook;
 use Puleeno\Goader\Host\io\Json;
 
 Hook::add_action('goader_setup_command', function ($command) {
-    $command->option('ch')
+    $command->option('c')
         ->aka('chapter')
         ->describedAs('Chapter ID');
 
