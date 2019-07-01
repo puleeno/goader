@@ -1,7 +1,7 @@
 {
   "name": "goader",
   "version": "0.2.1",
-  "description": "Command line downloader written in PHP support multi host",
+  "description": "Command line interface downloader written in PHP support multi hosts",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
