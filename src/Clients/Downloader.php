@@ -1,8 +1,9 @@
 <?php
 namespace Puleeno\Goader\Clients;
 
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Hook;
+use Puleeno\Goader\Clients\Helper;
 
 class Downloader
 {
@@ -14,6 +15,7 @@ class Downloader
     {
         $this->url = $url;
         $this->host = parse_url($this->url);
+        Hook::add_filter('custom_none_host', array($this, 'help'), 10, 2);
     }
 
     public function run($command)
@@ -24,7 +26,6 @@ class Downloader
         $host = isset($this->host['host']) ? $this->host['host'] : '';
         if (empty($host)) {
             $host = Hook::apply_filters('custom_none_host', $host, $command) ;
-
             if (empty($host)) {
                 exit('Please provide the valid URL that you want to download images');
             } else {
@@ -33,7 +34,7 @@ class Downloader
         }
         $action = Hook::apply_filters('goader_downloader', false, $host, $this->host, $this->url);
         if (is_callable($action)) {
-            return call_user_func($action, $host, $this->host, $this->url, $this->data);
+            return call_user_func($action, $host, $this->host, $this->url);
         } else {
             if (empty($this->isCustomHost)) {
                 $packages = explode('.', $host);
@@ -46,7 +47,7 @@ class Downloader
             } else {
                 $package_class = $host;
             }
-            if (class_exists($package_class)) {
+            if (is_string($package_class) && class_exists($package_class)) {
                 $downloader = new $package_class($this->url, $this->host);
                 if (!$downloader instanceof Host) {
                     throw new \Exception(
@@ -54,9 +55,19 @@ class Downloader
                     );
                 }
                 $downloader->download();
+            } elseif (is_callable($package_class)) {
+                return call_user_func($package_class);
             } else {
                 exit(sprintf('We don\'t support host %s', $host));
             }
+        }
+    }
+
+    public function help()
+    {
+        if ($this->url === '--help') {
+            $helper = new Helper();
+            return array($helper, 'download');
         }
     }
 }
