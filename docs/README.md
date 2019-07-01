@@ -1,3 +1,3 @@
-Goader commad line downloader
+Goader command line downloader
 =
 
