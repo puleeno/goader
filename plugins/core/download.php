@@ -13,7 +13,6 @@ Hook::add_action('goader_init', function () {
 
         if ($command === 'download' || preg_match('/^https?:\/\//', $maybeUrl)) {
             $downloader = new Downloader($maybeUrl);
-
             return array($downloader, 'run');
         }
     }

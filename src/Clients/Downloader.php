@@ -63,11 +63,13 @@ class Downloader
         }
     }
 
-    public function help()
+    public function help($host, $command)
     {
         if ($this->url === '--help') {
             $helper = new Helper();
             return array($helper, 'download');
         }
+
+        return $host;
     }
 }

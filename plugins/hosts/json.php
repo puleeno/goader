@@ -12,12 +12,9 @@ Hook::add_action('goader_init', function () {
         if (!file_exists($jsonFile)) {
             return $host;
         }
+
         $jsonStr = file_get_contents($jsonFile);
         $json = json_decode($jsonStr, true);
-
-        Hook::add_action('setup_goader_environment', function ($goader) use ($json) {
-            $goader->data['json'] = $json;
-        });
 
         if ($json) {
             return Json::class;
