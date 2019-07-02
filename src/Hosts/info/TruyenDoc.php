@@ -4,9 +4,10 @@ namespace Puleeno\Goader\Hosts\info;
 use Cocur\Slugify\Slugify;
 use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Command;
+use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
-use Puleeno\Goader\Environment;
 
 class TruyenDoc extends Host
 {
@@ -74,6 +75,7 @@ class TruyenDoc extends Host
             );
         }
         $chapters = array_reverse($chapters);
+
         Logger::log(sprintf('This manga has %d chapters', count($chapters)));
         Logger::log('Downloading...');
 
@@ -112,11 +114,14 @@ class TruyenDoc extends Host
         if ($total_images > 0) {
             $httpClient = new Client();
             foreach ($images as $index => $image) {
-                $image_url = $this->formatLink($image->getAttribute('src'));
-                $fileName = $this->generateFileName($image_url);
-                Logger::log(sprintf('The image %s is downloading...', $index + 1));
-
-                $this->getContent($image_url, $httpClient)->saveFile($fileName);
+                try {
+                    Logger::log(sprintf('The image %s is downloading...', $index + 1));
+                    $image_url = $this->formatLink($image->getAttribute('src'));
+                    $fileName = $this->generateFileName($image_url);
+                    $this->getContent($image_url, $httpClient)->saveFile($fileName);
+                } catch (\Exception $e) {
+                    Logger::log($e->getMessage());
+                }
             }
             if ($this->dirPrefix) {
                 Logger::log(sprintf('The %s is downloaded', strtolower($this->dirPrefix)));
