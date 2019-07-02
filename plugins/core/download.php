@@ -28,4 +28,11 @@ Hook::add_action('goader_init', function () {
         }
         return $newFileName;
     }
+
+    Hook::add_action('goader_setup_command', 'register_offset_command_option');
+    function register_offset_command_option($command)
+    {
+        $command->option('offset')
+            ->describedAs('Offset chapter');
+    }
 }, 20);
