@@ -29,7 +29,7 @@ class Text extends Host
         if (!empty($images)) {
             $httpClient = new Client();
             foreach ($images as $image) {
-                $image = $this->formatLink($image);
+                $image = $this->formatLink(trim($image));
                 $fileName = $this->generateFileName($image);
                 $this->getContent($image, $httpClient)->saveFile($fileName);
             }
