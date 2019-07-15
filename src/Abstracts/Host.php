@@ -9,6 +9,7 @@ use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Interfaces\HostInterface;
+use Puleeno\Goader\Logger;
 use Puleeno\Goader\Slug;
 
 abstract class Host implements HostInterface
@@ -116,6 +117,11 @@ abstract class Host implements HostInterface
             $name = sprintf('%s.%s', $fileName, $extension);
             Environment::setCurrentIndex(++$currentIndex);
         }
+
+        if (!empty($command['prefix'])) {
+            $name = sprintf('%s-%s', $command['prefix'], $name);
+        }
+
         if (!empty($this->dirPrefix)) {
             $name = trim($this->dirPrefix) . '/' . $name;
         }

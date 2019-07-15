@@ -34,5 +34,9 @@ Hook::add_action('goader_init', function () {
     {
         $command->option('offset')
             ->describedAs('Offset chapter');
+
+        $command->option('p')
+            ->aka('prefix')
+            ->describedAs('Use prefix file name');
     }
 }, 20);
