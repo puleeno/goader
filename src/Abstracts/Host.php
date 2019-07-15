@@ -67,14 +67,18 @@ abstract class Host implements HostInterface
             $client->setUserAgent('User-Agent: Mozilla/5.0 (Linux; U; Android 4.3; EN; C6502 Build/10.4.1.B.0.101) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 PlayStation App/1.60.5/EN/EN');
         }
 
-        $res = $client->request(
-            $method,
-            $url,
-            $options
-        );
+        try {
+            $res = $client->request(
+                $method,
+                $url,
+                $options
+            );
 
-        if ($res->getStatusCode() < 400) {
-            $newInstance->content = (string)$res->getBody();
+            if ($res->getStatusCode() < 400) {
+                $newInstance->content = (string)$res->getBody();
+            }
+        } catch (\Exception $e) {
+            Logger::log(sprintf('Error when download %s with message %s', $url, $e->getMessage()));
         }
 
         return $newInstance;
@@ -82,6 +86,10 @@ abstract class Host implements HostInterface
 
     public function saveFile($filePath)
     {
+        if (empty($this->content)) {
+            return;
+        }
+
         if (is_int(strpos($filePath, '/')) && !file_exists($dir = dirname($filePath))) {
             mkdir($dir, 0755, true);
         }
