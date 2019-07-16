@@ -55,22 +55,25 @@ class U17 extends Host
         }
     }
 
+    protected function makeChapterNum($text)
+    {
+        if (preg_match('/(\d{1,})/', $text, $matches)) {
+            return sprintf('Chap %s', $matches[1]);
+        }
+        return $text;
+    }
+
     public function downloadManga()
     {
         $this->content = (string)$this->getContent();
         $this->dom->load($this->content);
 
-        $domChapters = $this->dom->find('.list_chapter_comic ul.list_chapter a');
+        $domChapters = $this->dom->find('ul#chapter a');
         $chapters = array();
         foreach ($domChapters as $chapter) {
             $chapters[] = array(
-                'chapter_link' => sprintf(
-                    '%1$s://%2$s%3$s',
-                    $this->host['scheme'],
-                    $this->host['host'],
-                    $chapter->getAttribute('href')
-                ),
-                'chapter_text' => $chapter->text
+                'chapter_link' => $chapter->getAttribute('href'),
+                'chapter_text' => $this->makeChapterNum($chapter->text)
             );
         }
         $chapters = array_reverse($chapters);
@@ -79,9 +82,6 @@ class U17 extends Host
         Logger::log('Downloading...');
 
         foreach ($chapters as $chapter) {
-            // Reset current index to 1 to start download the new chapter
-            Environment::setCurrentIndex(1);
-
             $chapter_downloader = new self($chapter['chapter_link']);
             $chapter_downloader->download($chapter['chapter_text']);
         }
@@ -119,10 +119,16 @@ class U17 extends Host
         if ($total_images > 0) {
             $httpClient = new Client();
             foreach ($images as $index => $image) {
+                Environment::setCurrentIndex($index + 1);
                 try {
                     Logger::log(sprintf('The image %s is downloading...', $index + 1));
                     $image_url = $this->formatLink($image);
-                    $fileName = $this->generateFileName($image_url);
+                    if (!$this->validateLink($image_url)) {
+                        Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
+                        continue;
+                    }
+
+                    $fileName = $this->generateFileName($image_url, false);
                     $this->getContent($image_url, $httpClient)->saveFile($fileName);
                 } catch (\Exception $e) {
                     Logger::log($e->getMessage());
