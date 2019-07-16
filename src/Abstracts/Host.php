@@ -79,7 +79,8 @@ abstract class Host implements HostInterface
                 $newInstance->content = (string)$res->getBody();
             }
         } catch (\Exception $e) {
-            Logger::log(sprintf('Error when download %s with message %s', $url, $e->getMessage()));
+            Logger::log(sprintf('Error when download #%d with URL %s', Environment::getCurrentIndex(), $url));
+            // $e->getMessage();
         }
 
         return $newInstance;
@@ -99,7 +100,7 @@ abstract class Host implements HostInterface
         fclose($h);
     }
 
-    public function generateFileName($originalName)
+    public function generateFileName($originalName, $autoIncreaIndex = true)
     {
         $name = basename($originalName);
         $command = Command::getCommand();
@@ -115,7 +116,10 @@ abstract class Host implements HostInterface
             );
 
             $name = sprintf('%s.%s', $fileName, $extension);
-            Environment::setCurrentIndex(++$currentIndex);
+
+            if ($autoIncreaIndex) {
+                Environment::setCurrentIndex(++$currentIndex);
+            }
         }
 
         if (!empty($command['prefix'])) {
@@ -157,5 +161,13 @@ abstract class Host implements HostInterface
     public function getDirPrefix()
     {
         return $this->dirPrefix;
+    }
+
+    public function validateLink($link)
+    {
+        if (empty($link)) {
+            return false;
+        }
+        return preg_match('/^https?:\/\//', $link) && is_int(strpos($link, '.'));
     }
 }

@@ -6,6 +6,7 @@ use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
+use Puleeno\Goader\Logger;
 
 class Text extends Host
 {
@@ -28,9 +29,16 @@ class Text extends Host
         $images = explode("\n", file_get_contents($this->host['path']));
         if (!empty($images)) {
             $httpClient = new Client();
-            foreach ($images as $image) {
+            foreach ($images as $index => $image) {
                 $image = $this->formatLink(trim($image));
-                $fileName = $this->generateFileName($image);
+                if (!$this->validateLink($image)) {
+                    Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image));
+                    continue;
+                }
+
+                Environment::setCurrentIndex($index + 1);
+
+                $fileName = $this->generateFileName($image, false);
                 $this->getContent($image, $httpClient)->saveFile($fileName);
             }
         }
