@@ -31,7 +31,7 @@ class Config
     {
     }
 
-    public static function get($name) {
-
+    public static function get($name)
+    {
     }
 }

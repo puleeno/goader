@@ -6,7 +6,6 @@ use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 
-
 class Duzhez extends Host
 {
     const NAME = 'duzhez';

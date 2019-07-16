@@ -13,7 +13,7 @@ class CloudScraper implements ClientInterface
 
     public function __construct($options = [])
     {
-        $this->bindFile = $this->getBinary();
+        $this->binFile = $this->getBinary();
         $this->nodeBinary = $this->getNodeBinary();
     }
 

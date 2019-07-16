@@ -1,7 +1,6 @@
 <?php
-namespace Puleeno\Goader\Hosts\info;
+namespace Puleeno\Goader\Hosts\com;
 
-use Cocur\Slugify\Slugify;
 use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
@@ -9,31 +8,31 @@ use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
 
-class TruyenDoc extends Host
+class U17 extends Host
 {
     protected $dom;
 
     public $mangaID;
     public $chapterID;
 
-    protected $useCookie = true;
+    const CHAPTER_URL_FORMAT= '%s://www.%s/comic/ajax.php?mod=chapter&act=get_chapter_v5&chapter_id=%s';
 
     protected function checkPageType()
     {
         /**
-         * Manga URL: http://truyendoc.info/10498/bj-alex
-         * Chapter URI: http://truyendoc.info/10498/266534/bj-alex-chap-1/
+         * Manga URL: http://www.u17.com/comic/144098.html
+         * Chapter URI: http://www.u17.com/chapter/580167.html
          *
          * 1: Manga
          * 2: Chapter
          */
-        $pat = '/truyendoc\.info\/(\d{1,})(\/\d{1,})?\/(.+)\/?$/';
+        $pat = '/com\/(comic|chapter)\/(\d{1,}).html$/';
         if (preg_match($pat, $this->url, $matches)) {
-            $this->mangaID = $matches[1];
-            if (empty($matches[2])) {
+            if ($matches[1] === 'comic') {
+                $this->mangaID = $matches[2];
                 return 1;
             }
-            $this->mangaID = $matches[2];
+            $this->chapterID = $matches[2];
             return 2;
         }
         return false;
@@ -89,20 +88,26 @@ class TruyenDoc extends Host
         Logger::log('The manga is downloaded successfully!!');
     }
 
+    public function getImagesFromJsonStr($strJson)
+    {
+        $json = json_decode($strJson, true);
+        if (count($json) < 1) {
+            return [];
+        }
+        $images = [];
+        foreach ($json['image_list'] as $image) {
+            $images[] = $image['src'];
+        }
+        return $images;
+    }
+
     public function downloadChapter()
     {
-        $this->content = (string)$this->getContent();
-        $this->dom->load($this->content);
+        $chapterUrl = sprintf(self::CHAPTER_URL_FORMAT, $this->host['scheme'], $this->host['host'], $this->chapterID);
 
-        $chapterArr = explode('/', trim($this->host['path'], '/'));
-        $chapter_name = end($chapterArr);
+        $this->content = (string)$this->getContent($chapterUrl);
+        $images = $this->getImagesFromJsonStr($this->content);
 
-        if ($chapter_name) {
-            $slugify = new Slugify();
-            $this->data['file_name_prefix'] = $slugify->slugify($chapter_name);
-        }
-
-        $images = $this->dom->find('.main_content_read img');
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
@@ -116,7 +121,7 @@ class TruyenDoc extends Host
             foreach ($images as $index => $image) {
                 try {
                     Logger::log(sprintf('The image %s is downloading...', $index + 1));
-                    $image_url = $this->formatLink($image->getAttribute('src'));
+                    $image_url = $this->formatLink($image);
                     $fileName = $this->generateFileName($image_url);
                     $this->getContent($image_url, $httpClient)->saveFile($fileName);
                 } catch (\Exception $e) {
@@ -135,14 +140,9 @@ class TruyenDoc extends Host
     public function formatLink($originalUrl)
     {
         $link = $originalUrl;
-
-        $pre = Hook::apply_filters('truyendoc_filter_image_link', false, $link);
+        $pre = Hook::apply_filters('u17_filter_image_link', false, $link);
         if ($pre) {
             return $pre;
-        }
-
-        if (preg_match('/url=(https?.+.\w{1,4})/', $link, $matches)) {
-            $link = $matches[1];
         }
         return $link;
     }

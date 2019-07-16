@@ -13,7 +13,6 @@ class Truyentranh869 extends Host
         $detectPattern = sprintf('/com\/(.+-()-\d{1,})\/?$/', implode('|', $this->chapterPatterns));
 
         if (preg_match($detectPattern, $this->url, $matches)) {
-            var_dump($matches);
             $this->downloadChapter();
         } else {
         }

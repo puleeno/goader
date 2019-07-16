@@ -14,8 +14,6 @@ use Puleeno\Goader\Slug;
 
 abstract class Host implements HostInterface
 {
-    const NAME = '';
-
     protected $url;
     protected $host;
     protected $content;
@@ -49,23 +47,28 @@ abstract class Host implements HostInterface
         return $this->content;
     }
 
+    public function getName()
+    {
+        return $this::NAME;
+    }
+
 
     public function getContent($url = '', $client = null, $method = 'GET', $options = array())
     {
         if (empty($url)) {
             $url = $this->url;
         }
-
         $currentClass = get_class($this);
+
+
         $newInstance = new $currentClass($url);
 
         if (is_null($client)) {
-            if (empty($this->useCloudScraper)) {
+            if (!empty($this->useCloudScraper)) {
                 $client = new Cloudscraper();
             } else {
                 $client = new Client();
             }
-            $client->setUserAgent('User-Agent: Mozilla/5.0 (Linux; U; Android 4.3; EN; C6502 Build/10.4.1.B.0.101) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 PlayStation App/1.60.5/EN/EN');
         }
 
         try {
