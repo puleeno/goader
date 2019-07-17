@@ -18,15 +18,15 @@ class Kuaikanmanhua extends Host
     protected function checkPageType()
     {
         /**
-         * Manga URL: http://www.u17.com/comic/144098.html
-         * Chapter URI: http://www.u17.com/chapter/580167.html
+         * Manga URL: https://www.kuaikanmanhua.com/web/topic/2631/
+         * Chapter URI: https://www.kuaikanmanhua.com/web/comic/141851/
          *
          * 1: Manga
          * 2: Chapter
          */
-        $pat = '/com\/(comic|chapter)\/(\d{1,}).html$/';
+        $pat = '/web\/(topic|comic)\/(\d{1,})\/?$/';
         if (preg_match($pat, $this->url, $matches)) {
-            if ($matches[1] === 'comic') {
+            if ($matches[1] === 'topic') {
                 $this->mangaID = $matches[2];
                 return 1;
             }
