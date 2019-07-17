@@ -104,6 +104,7 @@ abstract class Host implements HostInterface
         fclose($h);
     }
 
+
     public function generateFileName($originalName, $autoIncreaIndex = true)
     {
         $name = basename($originalName);
@@ -119,7 +120,7 @@ abstract class Host implements HostInterface
                 $this->data,
             );
 
-            $name = sprintf('%s.%s', $fileName, $extension ? $extension : $this->defaultExtension());
+            $name = sprintf('%s.%s', $fileName, $this->getExtension($extension));
 
             if ($autoIncreaIndex) {
                 Environment::setCurrentIndex(++$currentIndex);
@@ -135,6 +136,14 @@ abstract class Host implements HostInterface
         }
 
         return $name;
+    }
+
+    public function getExtension($extension)
+    {
+        if (empty($extension)) {
+            $extension = $this->defaultExtension();
+        }
+        return Hook::apply_filters($this->getName() . '_file_extension', $extension);
     }
 
     public function defaultExtension()
