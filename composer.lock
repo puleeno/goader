@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c205ae595caf1451c9c9970433aa60f",
+    "content-hash": "9e620c93b9e21971d3d6e376ae32d6b3",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -190,16 +190,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "dev-master",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "e113254d23b24c548f0b4d8f671828c4eeb876d2"
+                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/e113254d23b24c548f0b4d8f671828c4eeb876d2",
-                "reference": "e113254d23b24c548f0b4d8f671828c4eeb876d2",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
+                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +257,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-06-17T23:10:01+00:00"
+            "time": "2019-07-01T23:21:34+00:00"
         },
         {
             "name": "kevinlebrun/colors.php",
@@ -544,24 +544,21 @@
         },
         {
             "name": "vlucas/pikirasa",
-            "version": "dev-master",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/pikirasa.git",
-                "reference": "13037864da08933eb716537cfac055d3735d1c16"
+                "reference": "bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/pikirasa/zipball/13037864da08933eb716537cfac055d3735d1c16",
-                "reference": "13037864da08933eb716537cfac055d3735d1c16",
+                "url": "https://api.github.com/repos/vlucas/pikirasa/zipball/bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde",
+                "reference": "bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0.0|^5.0.0"
             },
             "type": "library",
             "autoload": {
@@ -592,7 +589,7 @@
                 "public key",
                 "rsa"
             ],
-            "time": "2019-06-14T01:10:09+00:00"
+            "time": "2015-01-17T16:13:09+00:00"
         },
         {
             "name": "voku/php-hooks",
@@ -651,9 +648,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "vlucas/pikirasa": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
