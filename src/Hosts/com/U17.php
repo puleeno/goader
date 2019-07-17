@@ -76,13 +76,12 @@ class U17 extends Host
                 'chapter_text' => $this->makeChapterNum($chapter->text)
             );
         }
-        $chapters = array_reverse($chapters);
 
         Logger::log(sprintf('This manga has %d chapters', count($chapters)));
         Logger::log('Downloading...');
 
         foreach ($chapters as $chapter) {
-            $chapter_downloader = new self($chapter['chapter_link']);
+            $chapter_downloader = new self($chapter['chapter_link'], $this->host);
             $chapter_downloader->download($chapter['chapter_text']);
         }
         Logger::log('The manga is downloaded successfully!!');
@@ -121,7 +120,7 @@ class U17 extends Host
             foreach ($images as $index => $image) {
                 Environment::setCurrentIndex($index + 1);
                 try {
-                    Logger::log(sprintf('The image %s is downloading...', $index + 1));
+                    Logger::log(sprintf('The image %s with URL %s is downloading...', $index + 1, $image));
                     $image_url = $this->formatLink($image);
                     if (!$this->validateLink($image_url)) {
                         Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
@@ -135,7 +134,7 @@ class U17 extends Host
                 }
             }
             if ($this->dirPrefix) {
-                Logger::log(sprintf('The %s is downloaded', strtolower($this->dirPrefix)));
+                Logger::log(sprintf('The %s is downloaded successfully!!', strtolower($this->dirPrefix)));
             } else {
                 Logger::log(sprintf('The chapter is downloaded successfully!!'));
             }
