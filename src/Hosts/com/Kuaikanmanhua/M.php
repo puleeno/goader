@@ -25,4 +25,19 @@ class M extends Kuaikanmanhua
         }
         return false;
     }
+
+    public function getImagesFromJsonStr($strJson)
+    {
+        $strJson = $this->preparingJsonStr($strJson);
+        $json = json_decode($strJson, true);
+        if (count($json) < 1) {
+            return [];
+        }
+        return $json;
+    }
+
+    public function getChapterImagePattern()
+    {
+        return '/__NUXT__=\(function\([^\)]*\)(\{[^\}]*\})/';
+    }
 }

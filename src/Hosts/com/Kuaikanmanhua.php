@@ -11,7 +11,6 @@ use Puleeno\Goader\Logger;
 class Kuaikanmanhua extends Host
 {
     protected $dom;
-
     public $mangaID;
     public $chapterID;
 
@@ -92,25 +91,32 @@ class Kuaikanmanhua extends Host
 
     public function preparingJsonStr($str)
     {
+        $json = $str;
         $pos = strpos($str, 'return');
+        $searchPatterns = array();
+        $replaces = array();
+
         if (is_numeric($pos)) {
             $json = substr($str, 0, $pos);
             $json = rtrim($json, ';');
             $json .= '}';
-        }
-
-        $json = preg_replace(
-            array(
+            $searchPatterns = array(
                 '/d\[(\d{1,})\]="/',
                 '/";/'
-            ),
-            array(
+            );
+            $replaces = array(
                 '"$1": "',
                 '",'
-            ),
-            $json
-        );
+            );
+        } else {
+            $searchPatterns = array(
+                '/(width|height):[^,]*,\n?/',
+                '/(url)/'
+            );
+            $replaces = array('', '"$1"');
+        }
 
+        $json = preg_replace($searchPatterns, $replaces, $json);
         return $json;
     }
 
@@ -118,16 +124,27 @@ class Kuaikanmanhua extends Host
     {
         $strJson = $this->preparingJsonStr($strJson);
         $json = json_decode($strJson, true);
+
         if (count($json) < 1) {
             return [];
         }
-        return $json;
+        $images = [];
+        foreach ($json as $image) {
+            $images[] = $image['url'];
+        }
+
+        return $images;
+    }
+
+    public function getChapterImagePattern()
+    {
+        return '/__NUXT__=\(function\([^\)]*\)\{return.+comicImages:(\[[^\]]*])/';
     }
 
     public function downloadChapter()
     {
         $this->content = (string)$this->getContent();
-        if (!preg_match('/__NUXT__=\(function\([^\)]*\)(\{[^\}]*\})/', $this->content, $matches)) {
+        if (!preg_match($this->getChapterImagePattern(), $this->content, $matches)) {
             Logger::log(sprintf('Occur error when download chapter has URL %s', $this->url));
         }
 
