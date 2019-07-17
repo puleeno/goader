@@ -30,6 +30,9 @@ class Text extends Host
     {
         $images = explode("\n", file_get_contents($this->host['path']));
         if (!empty($images)) {
+            $totalImages = count($images);
+            Logger::log(sprintf('Your file has contains %d URLs', $totalImages));
+
             $httpClient = new Client();
             foreach ($images as $index => $image) {
                 $image = $this->formatLink(trim($image));
@@ -40,9 +43,12 @@ class Text extends Host
 
                 Environment::setCurrentIndex($index + 1);
 
+                Logger::log(sprintf('Download image has URL %s', $image));
                 $fileName = $this->generateFileName($image, false);
                 $this->getContent($image, $httpClient)->saveFile($fileName);
             }
+
+            Logger::log('All your URL has downloaded sucessfully!!');
         }
     }
 }
