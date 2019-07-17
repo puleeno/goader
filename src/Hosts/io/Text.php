@@ -10,6 +10,8 @@ use Puleeno\Goader\Logger;
 
 class Text extends Host
 {
+    const NAME = 'text';
+
     public function formatLink($originalLink)
     {
         $command = Command::getCommand();

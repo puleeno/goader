@@ -23,6 +23,7 @@ abstract class Host implements HostInterface
     protected $cookieJar;
     protected $dirPrefix;
     protected $dom;
+    protected $defaultExtension = 'jpg';
 
     protected $data = array();
 
@@ -118,7 +119,7 @@ abstract class Host implements HostInterface
                 $this->data,
             );
 
-            $name = sprintf('%s.%s', $fileName, $extension);
+            $name = sprintf('%s.%s', $fileName, $extension ? $extension : $this->defaultExtension());
 
             if ($autoIncreaIndex) {
                 Environment::setCurrentIndex(++$currentIndex);
@@ -134,6 +135,14 @@ abstract class Host implements HostInterface
         }
 
         return $name;
+    }
+
+    public function defaultExtension()
+    {
+        return Hook::apply_filters(
+            $this->getName() . '_the_file_extension',
+            $this->defaultExtension
+        );
     }
 
     public function detecttExtension($filename)
