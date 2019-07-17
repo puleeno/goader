@@ -12,13 +12,13 @@ Hook::add_action('goader_init', function () {
         $command = array_shift($args);
 
         if ($command === 'download' || preg_match('/^https?:\/\//', $maybeUrl)) {
+            Hook::add_filter('image_sequence_file_name', 'goader_sequence_download_file_name', 10, 3);
+            Hook::add_action('goader_setup_command', 'register_offset_command_option');
+
             $downloader = new Downloader($maybeUrl);
             return array($downloader, 'run');
         }
     }
-    Hook::add_filter('register_goader_command', 'goader_core_register_download_command', 10, 3);
-
-    Hook::add_filter('image_sequence_file_name', 'goader_sequence_download_file_name', 10, 3);
 
     function goader_sequence_download_file_name($fileName, $currentIndex, $data)
     {
@@ -29,7 +29,6 @@ Hook::add_action('goader_init', function () {
         return $newFileName;
     }
 
-    Hook::add_action('goader_setup_command', 'register_offset_command_option');
     function register_offset_command_option($command)
     {
         $command->option('offset')
@@ -39,4 +38,5 @@ Hook::add_action('goader_init', function () {
             ->aka('prefix')
             ->describedAs('Use prefix file name');
     }
+    Hook::add_filter('register_goader_command', 'goader_core_register_download_command', 10, 3);
 }, 20);

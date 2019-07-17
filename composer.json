@@ -16,7 +16,8 @@
         "nategood/commando": "~0.3.0",
         "voku/php-hooks": "~0.2.11",
         "paquettg/php-html-parser": "^2.0.2",
-        "cocur/slugify": "^3.2"
+        "cocur/slugify": "^3.2",
+        "vlucas/pikirasa": "dev-master"
     },
     "autoload": {
         "psr-4": {
