@@ -3,7 +3,7 @@ namespace Puleeno\Goader\Clients\Image;
 
 use Puleeno\Goader\Command;
 
-class Merge
+class Convert
 {
     protected $options;
     protected $action;

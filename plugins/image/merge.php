@@ -1,10 +1,10 @@
 <?php
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Clients\Image\Merge;
-
+use Puleeno\Goader\Command;
+use Puleeno\Goader\Hook;
 
 Hook::add_action('goader_init', function () {
-    function goader_core_register_image_merge_command($runner, $args, $command)
+    function goader_core_register_image_merge_command($runner, $args)
     {
         if (empty($args)) {
             return $runner;
@@ -12,15 +12,16 @@ Hook::add_action('goader_init', function () {
 
         $command = array_shift($args);
         if ($command === 'merge') {
-            Hook::add_action('goader_setup_command', 'register_default_image_merge_command_options');
+            register_default_image_merge_command_options();
 
             $mergeClient = new Merge();
             return array($mergeClient, 'run');
         }
     }
 
-    function register_default_image_merge_command_options($command)
+    function register_default_image_merge_command_options()
     {
+        $command = Command::getCommand();
         $command->option('offset')
             ->describedAs('Offset chapter');
 
@@ -29,5 +30,5 @@ Hook::add_action('goader_init', function () {
             ->describedAs('Use prefix file name');
     }
 
-    Hook::add_filter('register_goader_command', 'goader_core_register_image_merge_command', 10, 3);
+    Hook::add_filter('register_goader_command', 'goader_core_register_image_merge_command', 10, 2);
 }, 50);

@@ -104,7 +104,8 @@ class Lezhin extends Host
     public function downloadChapter()
     {
         $chapterHTML = (string)$this->getContent();
-        var_dump($chapterHTML);die;
+        var_dump($chapterHTML);
+        die;
 
         $chapterUrl = sprintf(self::CHAPTER_URL_FORMAT, $this->host['scheme'], $this->host['host'], $this->chapterID);
         $this->content = (string)$this->getContent($chapterUrl);

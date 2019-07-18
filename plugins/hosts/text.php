@@ -1,4 +1,5 @@
 <?php
+use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Hosts\io\Text;
@@ -16,8 +17,15 @@ Hook::add_action('goader_init', function () {
         $ext = pathinfo($textFile, PATHINFO_EXTENSION);
 
         if ($ext === 'txt') {
-            Hook::add_action('goader_setup_command', function ($command) {
-                $command->option('h')
+            register_text_command_options();
+            return Text::class;
+        }
+    }
+
+    function register_text_command_options()
+    {
+        $command = Command::getCommand();
+        $command->option('h')
                     ->aka('host')
                     ->describedAs('Integrate with host configs via option')
                     ->must(function ($supportedHost) {
@@ -28,10 +36,6 @@ Hook::add_action('goader_init', function () {
                 $command->option('u')
                     ->aka('url')
                     ->describedAs('Url prefix');
-            });
-
-            return Text::class;
-        }
     }
 
     Hook::add_filter('goaders', function ($hosts) {

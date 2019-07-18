@@ -3,22 +3,21 @@ namespace Puleeno\Goader;
 
 class Encryption
 {
-	protected static $encryption;
+    protected static $encryption;
 
-	public static function getInstance()
-	{
+    public static function getInstance()
+    {
+    }
 
-	}
+    public function __construct()
+    {
+    }
 
-	public function __construct()
-	{
-	}
+    public function encrypt()
+    {
+    }
 
-	public function encrypt()
-	{
-	}
-
-	public static function decrypt()
-	{
-	}
+    public static function decrypt()
+    {
+    }
 }

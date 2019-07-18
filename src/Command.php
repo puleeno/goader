@@ -20,6 +20,7 @@ class Command
     public function __construct()
     {
         $this->command = new Commando();
+        self::defaultCommandOptions($this->command);
     }
 
     public static function __callStatic($name, $args)

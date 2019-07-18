@@ -24,9 +24,6 @@ class Goader
         // Init environment for Goader
         Environment::getInstance();
 
-        // Setup default options for command line
-        Hook::add_action('goader_setup_command', array(Command::class, 'defaultCommandOptions'));
-
         // Load the plugins to integrate with Goader
         $this->loadPlugins();
     }
@@ -37,24 +34,19 @@ class Goader
 
         Hook::do_action('goader_init');
 
-        /**
-         * Setup the command to run by Goader
-         */
-        $command = Command::getCommand();
-        Hook::do_action('goader_setup_command', $command);
 
         // Detect command via Goader core or Goader
         $commandArgs = Environment::getCommandArgs();
-        $runner = Hook::apply_filters('register_goader_command', null, $commandArgs, $command);
+        $runner = Hook::apply_filters('register_goader_command', null, $commandArgs);
 
         // Check is runner is registered
         if (is_callable($runner)) {
             // Setup goader environment before run command
             Hook::do_action('setup_goader_environment', $this);
 
-            call_user_func($runner, $command);
+            call_user_func($runner);
         } else {
-            $this->doNotSupportCommand($command[0]);
+            $this->doNotSupportCommand($commandArgs[0]);
         }
     }
 
