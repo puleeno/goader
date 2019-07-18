@@ -1,4 +1,5 @@
 {
     "phpcs.enable": true,
-    "phpcs.standard": "PSR2"
+    "phpcs.standard": "PSR2",
+    "search.useIgnoreFiles": false
 }

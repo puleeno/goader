@@ -2,11 +2,13 @@
 namespace Puleeno\Goader\Clients;
 
 use Puleeno\Goader\Abstracts\Host;
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Clients\Helper;
+use Puleeno\Goader\Command;
+use Puleeno\Goader\Hook;
 
 class Downloader
 {
+    protected $command;
     protected $url;
     protected $host;
     protected $isCustomHost;
@@ -15,17 +17,20 @@ class Downloader
     {
         $this->url = $url;
         $this->host = parse_url($this->url);
+        $this->command = Command::getCommand();
+
         Hook::add_filter('custom_none_host', array($this, 'help'), 10, 2);
     }
 
-    public function run($command)
+    public function run()
     {
+
         if (isset($this->host['host'])) {
             $this->host['host'] = ltrim($this->host['host'], 'www.');
         }
         $host = isset($this->host['host']) ? $this->host['host'] : '';
         if (empty($host)) {
-            $host = Hook::apply_filters('custom_none_host', $host, $command) ;
+            $host = Hook::apply_filters('custom_none_host', $host, $this->command) ;
             if (empty($host)) {
                 exit('Please provide the valid URL that you want to download images');
             } else {

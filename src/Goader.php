@@ -3,6 +3,7 @@ namespace Puleeno\Goader;
 
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
+use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
 
 class Goader
@@ -23,7 +24,6 @@ class Goader
     public function __construct()
     {
         // Init commando
-        Command::getCommand();
 
         // Init environment for Goader
         Environment::getInstance();
@@ -70,6 +70,7 @@ class Goader
     {
         // Detect command via Goader core or Goader
         $commandArgs = Environment::getCommandArgs();
+
         $runner = Hook::apply_filters('register_goader_command', null, $commandArgs);
 
         // Check is runner is registered
