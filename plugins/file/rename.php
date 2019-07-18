@@ -33,7 +33,6 @@ Hook::add_action('goader_init', function () {
             register_default_file_rename_command_options();
 
             $renamer = new Renamer();
-            var_dump($renamer);
             return array($renamer, 'run');
         }
     }

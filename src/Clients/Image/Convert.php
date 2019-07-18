@@ -16,7 +16,6 @@ class Convert
 
     public function run()
     {
-        var_dump((array)$this->options);
         die;
     }
 }

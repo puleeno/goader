@@ -46,7 +46,6 @@ Hook::add_action('goader_init', function () {
             Hook::add_filter('image_sequence_file_name', 'goader_sequence_download_file_name', 10, 3);
 
             $downloader = new Downloader($maybeUrl);
-            var_dump($downloader);
             return array($downloader, 'run');
         }
     }

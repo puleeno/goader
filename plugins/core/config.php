@@ -27,7 +27,6 @@ Hook::add_action('goader_init', function () {
             register_default_config_command_options();
 
             $config = new Config($maybeUrl);
-            var_dump($config);
             return array($config, 'run');
         }
     }

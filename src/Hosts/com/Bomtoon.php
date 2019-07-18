@@ -93,8 +93,6 @@ class Bomtoon extends Host
     public function downloadChapter()
     {
         $this->content = (string)$this->getContent();
-        var_dump($this->content);
-        die;
         $this->dom->load($this->content);
 
         $images = $this->dom->find('#bt-webtoon-image img');
