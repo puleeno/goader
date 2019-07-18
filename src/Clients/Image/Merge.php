@@ -137,11 +137,9 @@ class Merge
         return $trunkFiles;
     }
 
-
     public function convertByIndex($imageIndexes)
     {
         $extension = $this->selectExtension($this->getExtenions());
-
 
         $files = glob(
             sprintf(
