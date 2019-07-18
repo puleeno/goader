@@ -23,12 +23,25 @@ Hook::add_action('goader_init', function () {
     function register_default_image_merge_command_options()
     {
         $command = Command::getCommand();
-        $command->option('offset')
-            ->describedAs('Offset chapter');
+        // $command->option('e')
+        //     ->aka('exclude')
+        //     ->describedAs('Exclude image index in current working directory');
 
-        $command->option('p')
-            ->aka('prefix')
-            ->describedAs('Use prefix file name');
+        $command->option('f')
+            ->aka('format')
+            ->describedAs('Image format output');
+
+        $command->option('o')
+            ->aka('output')
+            ->describedAs('The output directory will be contains output images');
+
+        $command->option('n')
+            ->aka('num')
+            ->describedAs('Merge each number of image to a image');
+
+        $command->option('m')
+            ->aka('mode')
+            ->describedAs('Merge image mode support horizontal and vertical');
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_merge_command', 10, 2);
