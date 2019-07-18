@@ -11,6 +11,8 @@ use Puleeno\Goader\Logger;
 
 class TruyenDoc extends Host
 {
+    const NAME = 'truyendoc';
+
     protected $dom;
 
     public $mangaID;

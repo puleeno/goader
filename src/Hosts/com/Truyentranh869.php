@@ -5,6 +5,8 @@ use Puleeno\Goader\Abstracts\Host;
 
 class Truyentranh869 extends Host
 {
+    const NAME = 'truyentranh869';
+
     protected $chapterPatterns = array('chap', 'chapter');
     public function download($folderName = null)
     {

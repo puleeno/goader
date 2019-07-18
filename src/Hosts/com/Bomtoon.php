@@ -10,6 +10,8 @@ use Puleeno\Goader\Logger;
 
 class Bomtoon extends Host
 {
+    const NAME = 'bomtoon';
+
     protected $dom;
 
     public $comicID;

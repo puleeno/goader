@@ -10,6 +10,8 @@ use Puleeno\Goader\Logger;
 
 class Kuaikanmanhua extends Host
 {
+    const NAME = 'kuaikanmanhua';
+
     protected $dom;
     public $mangaID;
     public $chapterID;

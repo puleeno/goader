@@ -7,6 +7,8 @@ use Puleeno\Goader\Logger;
 
 class Cungtruongnguyetblog extends Host
 {
+    const NAME = 'cungtruongnguyetblog';
+
     protected $chapterPatterns = array('chap', 'chapter', 'chuong');
 
     public function download($directoryName = null)

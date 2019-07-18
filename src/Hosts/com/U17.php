@@ -10,6 +10,8 @@ use Puleeno\Goader\Logger;
 
 class U17 extends Host
 {
+    const NAME = 'u17';
+
     protected $dom;
 
     public $mangaID;
