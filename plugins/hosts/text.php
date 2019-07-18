@@ -16,7 +16,20 @@ Hook::add_action('goader_init', function () {
         $ext = pathinfo($textFile, PATHINFO_EXTENSION);
 
         if ($ext === 'txt') {
-            Hook::do_action('setup_text_options');
+            Hook::add_action('goader_setup_command', function ($command) {
+                $command->option('h')
+                    ->aka('host')
+                    ->describedAs('Integrate with host configs via option')
+                    ->must(function ($supportedHost) {
+                        $supportedHosts = array_keys(Environment::supportedHosters());
+                        return in_array($supportedHost, $supportedHosts);
+                    });
+
+                $command->option('u')
+                    ->aka('url')
+                    ->describedAs('Url prefix');
+            });
+
             return Text::class;
         }
     }
@@ -25,21 +38,5 @@ Hook::add_action('goader_init', function () {
         return array_merge($hosts, array(
             'text' => Text::class
         ));
-    });
-
-    Hook::add_action('setup_text_options', function () {
-        Hook::add_action('goader_setup_command', function ($command) {
-            $command->option('h')
-                ->aka('host')
-                ->describedAs('Integrate with host configs via option')
-                ->must(function ($supportedHost) {
-                    $supportedHosts = array_keys(Environment::supportedHosters());
-                    return in_array($supportedHost, $supportedHosts);
-                });
-
-            $command->option('u')
-                ->aka('url')
-                ->describedAs('Url prefix');
-        });
     });
 }, 10);
