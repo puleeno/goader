@@ -161,7 +161,7 @@ class Kuaikanmanhua extends Host
             foreach ($images as $index => $image) {
                 Environment::setCurrentIndex($index + 1);
                 try {
-                    Logger::log(sprintf('The image %s with URL %s is downloading...', $index + 1, $image));
+                    Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image));
                     $image_url = $this->formatLink($image);
                     if (!$this->validateLink($image_url)) {
                         Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
