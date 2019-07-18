@@ -29,6 +29,7 @@ Hook::add_action('goader_init', function () {
             $config = new Config($maybeUrl);
             return array($config, 'run');
         }
+        return $runner;
     }
 
 

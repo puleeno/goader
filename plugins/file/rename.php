@@ -35,6 +35,7 @@ Hook::add_action('goader_init', function () {
             $renamer = new Renamer();
             return array($renamer, 'run');
         }
+        return $runner;
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_file_rename_command', 10, 2);

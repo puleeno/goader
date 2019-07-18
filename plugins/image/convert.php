@@ -17,6 +17,7 @@ Hook::add_action('goader_init', function () {
             $convertClient = new Convert();
             return array($convertClient, 'run');
         }
+        return $runner;
     }
 
     function register_default_image_convert_command_options()

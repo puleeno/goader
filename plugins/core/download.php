@@ -48,6 +48,7 @@ Hook::add_action('goader_init', function () {
             $downloader = new Downloader($maybeUrl);
             return array($downloader, 'run');
         }
+        return $runner;
     }
     Hook::add_filter('register_goader_command', 'goader_core_register_download_command', 10, 2);
 });
