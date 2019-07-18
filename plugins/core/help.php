@@ -9,7 +9,8 @@ Hook::add_action('goader_init', function () {
             $helper = new Helper();
             $command = array($helper, 'show');
         }
+        var_dump($command);
         return $command;
     }
     Hook::add_filter('register_goader_command', 'goader_register_help_command', 10, 2);
-}, 30);
+});

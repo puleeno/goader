@@ -1,4 +1,5 @@
 <?php
+use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Host\io\Json;

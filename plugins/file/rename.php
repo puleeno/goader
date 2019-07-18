@@ -4,8 +4,6 @@ use Puleeno\Goader\Clients\File\Renamer;
 use Puleeno\Goader\Command;
 
 Hook::add_action('goader_init', function () {
-
-
     function register_default_file_rename_command_options()
     {
         $command = Command::getCommand();
@@ -35,9 +33,10 @@ Hook::add_action('goader_init', function () {
             register_default_file_rename_command_options();
 
             $renamer = new Renamer();
+            var_dump($renamer);
             return array($renamer, 'run');
         }
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_file_rename_command', 10, 2);
-}, 35);
+});

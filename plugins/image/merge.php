@@ -15,6 +15,7 @@ Hook::add_action('goader_init', function () {
             register_default_image_merge_command_options();
 
             $mergeClient = new Merge();
+            var_dump($mergeClient);
             return array($mergeClient, 'run');
         }
     }
@@ -31,4 +32,4 @@ Hook::add_action('goader_init', function () {
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_merge_command', 10, 2);
-}, 50);
+});

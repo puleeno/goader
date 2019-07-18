@@ -10,8 +10,8 @@ class Renamer
 
     public function __construct()
     {
-        $this->options = Command::getCommand()->getOptions();
-        $this->action =array_shift($this->options);
+        // $this->options = Command::getCommand()->getOptions();
+        // $this->action =array_shift($this->options);
     }
 
     public function run()

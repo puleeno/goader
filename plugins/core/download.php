@@ -1,10 +1,12 @@
 <?php
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Clients\Downloader;
+use Puleeno\Goader\Command;
+use Puleeno\Goader\Hook;
 
 Hook::add_action('goader_init', function () {
     function register_options_for_download_command()
     {
+        $command = Command::getCommand();
         $command->option('offset')
             ->describedAs('Offset chapter');
 
@@ -44,8 +46,9 @@ Hook::add_action('goader_init', function () {
             Hook::add_filter('image_sequence_file_name', 'goader_sequence_download_file_name', 10, 3);
 
             $downloader = new Downloader($maybeUrl);
+            var_dump($downloader);
             return array($downloader, 'run');
         }
     }
     Hook::add_filter('register_goader_command', 'goader_core_register_download_command', 10, 2);
-}, 20);
+});

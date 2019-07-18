@@ -1,6 +1,7 @@
 <?php
-use Puleeno\Goader\Hook;
 use Puleeno\Goader\Clients\Config;
+use Puleeno\Goader\Command;
+use Puleeno\Goader\Hook;
 
 Hook::add_action('goader_init', function () {
     function register_default_config_command_options()
@@ -26,10 +27,11 @@ Hook::add_action('goader_init', function () {
             register_default_config_command_options();
 
             $config = new Config($maybeUrl);
+            var_dump($config);
             return array($config, 'run');
         }
     }
 
 
-    Hook::add_filter('register_goader_command', 'goader_core_register_config_command', 10, 2);
-}, 15);
+    Hook::add_filter('register_goader_command', 'goader_core_register_config_command', 15, 2);
+});

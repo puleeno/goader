@@ -11,7 +11,7 @@ class Convert
     public function __construct()
     {
         $this->options = Command::getCommand()->getOptions();
-        $this->action =array_shift($this->command);
+        $this->action =array_shift($this->options);
     }
 
     public function run()

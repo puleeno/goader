@@ -2,6 +2,7 @@
 namespace Puleeno\Goader;
 
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Command;
 use Puleeno\Goader\Logger;
 
 class Goader
@@ -21,33 +22,23 @@ class Goader
 
     public function __construct()
     {
+        // Init commando
+        Command::getCommand();
+
         // Init environment for Goader
         Environment::getInstance();
 
         // Load the plugins to integrate with Goader
         $this->loadPlugins();
+
+        $this->initHooks();
     }
 
     public function run()
     {
-        Logger::info();
-
         Hook::do_action('goader_init');
 
-
-        // Detect command via Goader core or Goader
-        $commandArgs = Environment::getCommandArgs();
-        $runner = Hook::apply_filters('register_goader_command', null, $commandArgs);
-
-        // Check is runner is registered
-        if (is_callable($runner)) {
-            // Setup goader environment before run command
-            Hook::do_action('setup_goader_environment', $this);
-
-            call_user_func($runner);
-        } else {
-            $this->doNotSupportCommand($commandArgs[0]);
-        }
+        Hook::do_action('goader_run');
     }
 
     public function doNotSupportCommand($command)
@@ -72,5 +63,28 @@ class Goader
         }
 
         Hook::do_action('goader_loaded_plugins');
+    }
+
+    // phpcs:ignore
+    public function _run()
+    {
+        // Detect command via Goader core or Goader
+        $commandArgs = Environment::getCommandArgs();
+        $runner = Hook::apply_filters('register_goader_command', null, $commandArgs);
+
+        // Check is runner is registered
+        if (is_callable($runner)) {
+            // Setup goader environment before run command
+            Hook::do_action('setup_goader_environment', $this);
+
+            call_user_func($runner);
+        } else {
+            $this->doNotSupportCommand($commandArgs[0]);
+        }
+    }
+
+    public function initHooks()
+    {
+        Hook::add_action('goader_run', array($this, '_run'));
     }
 }

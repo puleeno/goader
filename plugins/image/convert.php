@@ -11,11 +11,11 @@ Hook::add_action('goader_init', function () {
         }
 
         $command = array_shift($args);
-        if ($command === 'merge') {
+        if ($command === 'convert') {
             register_default_image_convert_command_options();
 
             $convertClient = new Convert();
-            return array($mergeClient, 'run');
+            return array($convertClient, 'run');
         }
     }
 
@@ -31,4 +31,4 @@ Hook::add_action('goader_init', function () {
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_convert_command', 10, 2);
-}, 50);
+});
