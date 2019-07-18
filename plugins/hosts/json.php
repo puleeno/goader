@@ -17,6 +17,7 @@ Hook::add_action('goader_init', function () {
         $json = json_decode($jsonStr, true);
 
         if ($json) {
+            Hook::do_action('setup_json_options');
             return Json::class;
         }
     }
@@ -27,17 +28,19 @@ Hook::add_action('goader_init', function () {
         ));
     });
 
-    Hook::add_action('goader_setup_command', function ($command) {
-        $command->option('h')
-            ->aka('host')
-            ->describedAs('Integrate with host configs via option')
-            ->must(function ($supportedHost) {
-                $supportedHosts = array_keys(Environment::supportedHosters());
-                return in_array($supportedHost, $supportedHosts);
-            });
+    Hook::add_action('setup_json_options', function(){
+        Hook::add_action('goader_setup_command', function ($command) {
+            $command->option('h')
+                ->aka('host')
+                ->describedAs('Integrate with host configs via option')
+                ->must(function ($supportedHost) {
+                    $supportedHosts = array_keys(Environment::supportedHosters());
+                    return in_array($supportedHost, $supportedHosts);
+                });
 
-        $command->option('u')
-            ->aka('url')
-            ->describedAs('Url prefix');
+            $command->option('u')
+                ->aka('url')
+                ->describedAs('Url prefix');
+        });
     });
 }, 10);

@@ -44,10 +44,5 @@ class Command
         $command->useDefaultHelp(false);
         $command->option('help')
             ->describedAs('Get the Goader help');
-
-        $command->option('s')
-            ->aka('sequence')
-            ->describedAs('Naming file with sequence number')
-            ->boolean();
     }
 }
