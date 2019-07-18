@@ -1,14 +1,21 @@
 <?php
 namespace Puleeno\Goader\Clients\Image;
 
+use Puleeno\Goader\Command;
+
 class Merge
 {
+    protected $options;
+    protected $action;
+
     public function __construct()
     {
+        $this->options = Command::getCommand()->getOptions();
+        $this->action =array_shift($this->command);
     }
 
     public function run()
     {
-        die('zo');
+        var_dump((array)$this->options);die;
     }
 }
