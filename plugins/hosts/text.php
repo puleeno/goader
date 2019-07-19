@@ -20,6 +20,7 @@ Hook::add_action('goader_init', function () {
             register_text_command_options();
             return Text::class;
         }
+        return $host;
     }
 
     function register_text_command_options()
@@ -37,10 +38,11 @@ Hook::add_action('goader_init', function () {
                     ->aka('url')
                     ->describedAs('Url prefix');
     }
+});
 
-    Hook::add_filter('goaders', function ($hosts) {
-        return array_merge($hosts, array(
-            'text' => Text::class
-        ));
-    });
-}, 10);
+
+Hook::add_filter('goaders', function ($hosts) {
+    return array_merge($hosts, array(
+        'text' => Text::class
+    ));
+});
