@@ -103,7 +103,7 @@ class Kuaikanmanhua extends Host
             $json = rtrim($json, ';');
             $json .= '}';
             $searchPatterns = array(
-                '/d\[(\d{1,})\]="/',
+                '/\w\[(\d{1,})\]="/',
                 '/";/'
             );
             $replaces = array(
