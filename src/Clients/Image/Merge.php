@@ -18,6 +18,7 @@ class Merge
     protected $excludes = [];
 
     protected $allowedTypeOutputs = ['jpg', 'jpeg', 'png', 'gif'];
+    protected $jump = false;
     protected $mode = 'vertical';
 
     public function __construct()
@@ -120,7 +121,9 @@ class Merge
             if (empty($jum)) {
                 $jum = 1;
             }
+            $this->jump = $jum;
             $current = 0;
+
             while ($current < $totalFiles) {
                 $current = $jum + $current;
                 $imageIndexes[] = $current;
@@ -218,7 +221,7 @@ class Merge
         }
         Logger::log();
         return sprintf(
-            '%s %s %s "%s.%s"',
+            '%s%s %s "%s.%s"',
             self::CONVERT_TOOL,
             $this->getModeCommand(),
             $input,
@@ -234,9 +237,13 @@ class Merge
 
     public function getModeCommand()
     {
-        if (in_array($this->mode, array('v', 'vertical'))) {
-            return '-append';
+        if ($this->jump) {
+            return;
         }
-        return '+append';
+
+        if (in_array($this->mode, array('v', 'vertical'))) {
+            return ' -append';
+        }
+        return ' +append';
     }
 }
