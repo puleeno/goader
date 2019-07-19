@@ -114,25 +114,36 @@ class Merge
 
     public function trunkFiles($files, $imageIndexes)
     {
+        $totalFiles = count($files);
         if (empty($imageIndexes)) {
-            return [$files];
+            $jum = (int)$this->options['num']->getValue();
+            if (empty($jum)) {
+                $jum = 1;
+            }
+            $current = 0;
+            while ($current < $totalFiles) {
+                $current = $jum + $current;
+                $imageIndexes[] = $current;
+            }
         }
-        $totalFileIndexes = count($files) - 1;
+
         $trunkFiles = [];
         $currentIndex = 0;
 
         foreach ($imageIndexes as $index) {
             if ($index < 1) {
                 continue;
-            } elseif ($index > $totalFileIndexes) {
-                $index =  $totalFileIndexes;
+            } elseif ($index > $totalFiles) {
+                $index =  $totalFiles;
             }
+
             $items = $index - $currentIndex;
             $trunkFiles[] = array_slice($files, $currentIndex, $items);
             $currentIndex = $index;
         }
-        if ($currentIndex < $totalFileIndexes) {
-            $trunkFiles[] = array_slice($files, $currentIndex, $totalFileIndexes - $currentIndex);
+
+        if ($currentIndex < $totalFiles) {
+            $trunkFiles[] = array_slice($files, $currentIndex, $totalFiles - $currentIndex);
         }
         return $trunkFiles;
     }
@@ -152,7 +163,7 @@ class Merge
 
         natsort($files);
 
-        $trunks = $this->trunkFiles($files, $imageIndexes);
+        $trunks = $this->trunkFiles(array_values($files), $imageIndexes);
 
         foreach ($trunks as $fileName => $files) {
             $fileName = sprintf('%s/%s', $this->outputDir, $fileName + 1);
@@ -203,10 +214,11 @@ class Merge
     public function buildCommand($input, $output)
     {
         if (is_array($input)) {
-            $input = implode(' ', $input);
+            $input = sprintf('"%s"', implode('" "', $input));
         }
+        Logger::log();
         return sprintf(
-            '%s %s %s %s.%s',
+            '%s %s %s "%s.%s"',
             self::CONVERT_TOOL,
             $this->getModeCommand(),
             $input,
