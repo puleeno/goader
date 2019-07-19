@@ -18,7 +18,6 @@ class Merge
     protected $excludes = [];
 
     protected $allowedTypeOutputs = ['jpg', 'jpeg', 'png', 'gif'];
-    protected $jump = false;
     protected $mode = 'vertical';
 
     public function __construct()
@@ -121,7 +120,6 @@ class Merge
             if (empty($jum)) {
                 $jum = 1;
             }
-            $this->jump = $jum;
             $current = 0;
 
             while ($current < $totalFiles) {
@@ -237,10 +235,6 @@ class Merge
 
     public function getModeCommand()
     {
-        if ($this->jump) {
-            return;
-        }
-
         if (in_array($this->mode, array('v', 'vertical'))) {
             return ' -append';
         }
