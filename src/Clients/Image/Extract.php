@@ -33,11 +33,9 @@ class Extract
         $outputDir = $this->options['output']->getValue();
         $this->outputDir = empty($outputDir) ? $this->defaultOutputDirectory() : $outputDir;
 
-        $mode = $this->options['mode']->getValue();
-        if (!empty($mode) && in_array($mode, array('vertical', 'horizontal', 'v', 'h'))) {
-            $this->mode = $mode;
-        } else {
-            $this->mode = 'v';
+        $begin = $this->options['begin']->getValue();
+        if ((int) $begin > 1) {
+            $this->currentIndex = $begin;
         }
     }
 
@@ -102,8 +100,8 @@ class Extract
             } else {
                 $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
                 $command = $this->buildCommand($file, $fileName);
-                $this->executeCommand($command);
                 $this->currentIndex++;
+                $this->executeCommand($command);
             }
         }
     }
@@ -117,7 +115,11 @@ class Extract
         for ($i = 1; $i <= $layers; $i++) {
             $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
             $command = $this->buildCommand($file . "[{$i}]", $fileName);
-            $this->executeCommand($command);
+
+            if (!$this->executeCommand($command)) {
+                $this->cleanErrorOutput($this->currentIndex);
+                break;
+            }
             $this->currentIndex++;
         }
     }
@@ -159,7 +161,7 @@ class Extract
         }
         Logger::log();
         return sprintf(
-            '%s %s "%s.%s"',
+            '%s "%s" "%s.%s"',
             self::CONVERT_TOOL,
             $input,
             $output,
@@ -169,6 +171,17 @@ class Extract
 
     public function executeCommand($command)
     {
-        shell_exec($command);
+        system($command, $res);
+        return $res === 0;
+    }
+
+    public function cleanErrorOutput($index) {
+        $globPatt = sprintf('%s/%s-*.%s', $this->outputDir, $index, $this->outputFormat);
+        $files = glob($globPatt);
+        if (count($files) > 0) {
+            foreach($files as $file) {
+                unlink($file);
+            }
+        }
     }
 }

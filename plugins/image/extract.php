@@ -39,9 +39,9 @@ Hook::add_action('goader_init', function () {
             ->aka('num')
             ->describedAs('Extract each number of image to a image');
 
-        $command->option('m')
-            ->aka('mode')
-            ->describedAs('Extract image mode support horizontal and vertical');
+        $command->option('b')
+            ->aka('begin')
+            ->describedAs('Naming start with the number');
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_extract_command', 10, 2);
