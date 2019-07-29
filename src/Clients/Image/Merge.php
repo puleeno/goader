@@ -20,6 +20,8 @@ class Merge
     protected $allowedTypeOutputs = ['jpg', 'jpeg', 'png', 'gif'];
     protected $mode = 'vertical';
 
+    protected $currentIndex = 1;
+
     public function __construct()
     {
         $this->options = Command::getCommand()->getOptions();
@@ -39,6 +41,11 @@ class Merge
             $this->mode = $mode;
         } else {
             $this->mode = 'v';
+        }
+
+        $begin = $this->options['begin']->getValue();
+        if ((int) $begin > 1) {
+            $this->currentIndex = $begin;
         }
     }
 
@@ -167,10 +174,11 @@ class Merge
         $trunks = $this->trunkFiles(array_values($files), $imageIndexes);
 
         foreach ($trunks as $fileName => $files) {
-            $fileName = sprintf('%s/%s', $this->outputDir, $fileName + 1);
+            $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
 
             $command = $this->buildCommand($files, $fileName);
             $this->executeCommand($command);
+            $this->currentIndex++;
         }
     }
 

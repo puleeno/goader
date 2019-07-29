@@ -42,6 +42,10 @@ Hook::add_action('goader_init', function () {
         $command->option('m')
             ->aka('mode')
             ->describedAs('Merge image mode support horizontal and vertical');
+
+        $command->option('b')
+            ->aka('begin')
+            ->describedAs('Naming start with the number');
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_merge_command', 10, 2);
