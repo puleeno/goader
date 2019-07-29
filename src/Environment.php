@@ -85,4 +85,21 @@ final class Environment
         array_shift($args);
         return $args;
     }
+
+    public static function getExtenions()
+    {
+        $extensions = [];
+        $files = glob('*.*');
+        foreach ($files as $file) {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $extension = strtolower($extension);
+            if (!isset($extensions[$extension])) {
+                $extensions[$extension] = 1;
+            } else {
+                $extensions[$extension]++;
+            }
+        }
+
+        return $extensions;
+    }
 }

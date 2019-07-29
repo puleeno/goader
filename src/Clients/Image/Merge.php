@@ -158,7 +158,7 @@ class Merge
 
     public function convertByIndex($imageIndexes)
     {
-        $extension = $this->selectExtension($this->getExtenions());
+        $extension = $this->selectExtension(Environment::getExtenions());
 
         $files = glob(
             sprintf(
@@ -193,23 +193,6 @@ class Merge
             }
         }
         return $extension;
-    }
-
-    public function getExtenions()
-    {
-        $extensions = [];
-        $files = glob('*.*');
-        foreach ($files as $file) {
-            $extension = pathinfo($file, PATHINFO_EXTENSION);
-            $extension = strtolower($extension);
-            if (!isset($extensions[$extension])) {
-                $extensions[$extension] = 1;
-            } else {
-                $extensions[$extension]++;
-            }
-        }
-
-        return $extensions;
     }
 
     public function convertByImageList($imageList)
