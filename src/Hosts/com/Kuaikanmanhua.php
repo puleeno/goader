@@ -72,14 +72,16 @@ class Kuaikanmanhua extends Host
         $this->content = (string)$this->getContent();
         $this->dom->load($this->content);
 
-        $domChapters = $this->dom->find('ul#chapter a');
+        $domChapters = $this->dom->find('.TopicList .TopicItem .title a');
         $chapters = array();
         foreach ($domChapters as $chapter) {
             $chapters[] = array(
-                'chapter_link' => $chapter->getAttribute('href'),
-                'chapter_text' => $this->makeChapterNum($chapter->text)
+                'chapter_link' => sprintf('%s://%s%s', $this->host['scheme'], $this->host['host'], $chapter->getAttribute('href')),
+                'chapter_text' => $this->makeChapterNum($chapter->find('span')->text)
             );
         }
+
+        $chapters = array_reverse($chapters);
 
         Logger::log(sprintf('This manga has %d chapters', count($chapters)));
         Logger::log('Downloading...');

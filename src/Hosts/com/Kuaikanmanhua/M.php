@@ -40,4 +40,28 @@ class M extends Kuaikanmanhua
     {
         return '/__NUXT__=\(function\([^\)]*\)(\{[^\}]*\})/';
     }
+
+    public function downloadManga()
+    {
+        $this->content = (string)$this->getContent();
+        $this->dom->load($this->content);
+
+        $domChapters = $this->dom->find('ul#chapter a');
+        $chapters = array();
+        foreach ($domChapters as $chapter) {
+            $chapters[] = array(
+                'chapter_link' => $chapter->getAttribute('href'),
+                'chapter_text' => $this->makeChapterNum($chapter->text)
+            );
+        }
+
+        Logger::log(sprintf('This manga has %d chapters', count($chapters)));
+        Logger::log('Downloading...');
+
+        foreach ($chapters as $chapter) {
+            $chapter_downloader = new self($chapter['chapter_link'], $this->host);
+            $chapter_downloader->download($chapter['chapter_text']);
+        }
+        Logger::log('The manga is downloaded successfully!!');
+    }
 }
