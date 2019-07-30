@@ -9,13 +9,31 @@ Hook::add_action('goader_init', function () {
         $command = Command::getCommand();
 
         $command->option('f')
-            ->aka('from')
+            ->aka('format')
             ->describedAs('Use prefix file name');
+
         $command->option('s')
-            ->aka('sequence');
+            ->aka('sequence')
+            ->boolean();
+
+
+        $command->option('o')
+            ->aka('output');
+
+        $command->option('b')
+            ->aka('begin')
+            ->describedAs('The number use to start index of file name');
 
         $command->option('j')
-            ->aka('jump');
+            ->aka('jump')
+            ->map(function($jump) {
+                return (int)$jump;
+            });
+
+        $command->option('r')
+            ->aka('raw')
+            ->describedAs('Keep don\'t sanitize file name and keep raw file name')
+            ->boolean();
 
         $command->option('p')
             ->aka('prefix')
