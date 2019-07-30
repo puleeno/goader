@@ -51,7 +51,7 @@ class Renamer
         $files = glob(sprintf('*.%s', $extension));
         natsort($files);
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $fileInfo = pathinfo($file);
             $fileName = $fileInfo['filename'];
             $format = $fileInfo['extension'];

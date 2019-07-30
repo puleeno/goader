@@ -16,7 +16,6 @@ Hook::add_action('goader_init', function () {
             ->aka('sequence')
             ->boolean();
 
-
         $command->option('o')
             ->aka('output');
 
@@ -26,7 +25,7 @@ Hook::add_action('goader_init', function () {
 
         $command->option('j')
             ->aka('jump')
-            ->map(function($jump) {
+            ->map(function ($jump) {
                 return (int)$jump;
             });
 

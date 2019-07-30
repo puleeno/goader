@@ -158,11 +158,12 @@ class Extract
         return $res === 0;
     }
 
-    public function cleanErrorOutput($index) {
+    public function cleanErrorOutput($index)
+    {
         $globPatt = sprintf('%s/%s-*.%s', $this->outputDir, $index, $this->outputFormat);
         $files = glob($globPatt);
         if (count($files) > 0) {
-            foreach($files as $file) {
+            foreach ($files as $file) {
                 unlink($file);
             }
         }
