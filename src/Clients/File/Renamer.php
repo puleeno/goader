@@ -72,7 +72,7 @@ class Renamer
                 $fileName = $this->slugify->slugify($fileName);
             }
 
-            $newFileName = sprintf('%s/%s.%s', $fileInfo['dirname'], $fileName, $format);
+            $newFileName = sprintf('%s/%s/%s.%s', $this->outputDir, $fileInfo['dirname'], $fileName, $format);
 
             if ($newFileName !== $file) {
                 rename($file, $newFileName);
