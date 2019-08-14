@@ -77,7 +77,7 @@ class Renamer
             if ($newFileName !== $file) {
                 rename($file, $newFileName);
                 Logger::log(
-                    sprintf('Rename file "%s" to "%s.%s"', $file, $fileName, $format)
+                    sprintf('Rename file "%s" to "%s"', $file, str_replace(getcwd(), '', $newFileName))
                 );
             }
         }
