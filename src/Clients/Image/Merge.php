@@ -206,11 +206,16 @@ class Merge
     public function buildCommand($input, $output)
     {
         if (is_array($input)) {
-            $input = sprintf('"%s"', implode('" "', $input));
+            $input = implode('" "', $input);
+        } else {
+            $ext = pathinfo($input, PATHINFO_EXTENSION);
+            if (in_array(strtolower($ext), array('psd', 'psb', 'tif'))) {
+                $input .= '[0]';
+            }
         }
-        Logger::log();
+
         return sprintf(
-            '%s%s %s "%s.%s"',
+            '%s%s "%s" "%s.%s"',
             self::CONVERT_TOOL,
             $this->getModeCommand(),
             $input,
