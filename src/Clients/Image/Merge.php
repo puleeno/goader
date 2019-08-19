@@ -206,10 +206,20 @@ class Merge
     public function buildCommand($input, $output)
     {
         if (is_array($input)) {
-            $input = implode('" "', $input);
+            $new_input = array();
+            foreach ($input as $i) {
+                $ext = pathinfo($i, PATHINFO_EXTENSION);
+                if (in_array(strtolower($ext), $this->getBitmapLayers())) {
+                    $new_input[] = sprintf('%s[0]', $i);
+                } else {
+                    $new_input[] = $i;
+                }
+            }
+            $input = implode('" "', $new_input);
+            unset($new_input);
         } else {
             $ext = pathinfo($input, PATHINFO_EXTENSION);
-            if (in_array(strtolower($ext), array('psd', 'psb', 'tif'))) {
+            if (in_array(strtolower($ext), $this->getBitmapLayers())) {
                 $input .= '[0]';
             }
         }
@@ -235,5 +245,13 @@ class Merge
             return ' -append';
         }
         return ' +append';
+    }
+
+    public function getBitmapLayers()
+    {
+        return Hook::apply_filters(
+            'goader_photoshop_format',
+            array('psd', 'psb', 'tif')
+        );
     }
 }
