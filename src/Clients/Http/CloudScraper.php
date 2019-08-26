@@ -15,6 +15,7 @@ class CloudScraper implements ClientInterface
     {
         $this->binFile = $this->getBinary();
         $this->nodeBinary = $this->getNodeBinary();
+        $this->options = $options;
     }
 
     public function getNodeBinary()
@@ -36,7 +37,6 @@ class CloudScraper implements ClientInterface
     protected function buildCommand($commandArgs)
     {
         $command = '';
-
         foreach ($commandArgs as $key => $val) {
             if (is_string($key)) {
                 $command .= sprintf(' --%s=%s', $key, $val);
@@ -54,18 +54,20 @@ class CloudScraper implements ClientInterface
 
     public function executeCommand($command)
     {
+        var_dump($command);die;
         exec($command, $output);
         return implode("\n", $output);
     }
 
     public function request($method, $uri = '', $options = [])
     {
-        $commandArgs = array();
+        $this->options = array_merge($this->options, $options);
+        $this->options = array_merge($this->options, [
+            'method' => $method,
+            'uri' => $uri,
+        ]);
 
-        $commandArgs['method'] = $method;
-        $commandArgs[] = $uri;
-
-        $command = $this->buildCommand($commandArgs);
+        $command = $this->buildCommand($this->options);
         $body = $this->executeCommand($command);
 
         $res = new Response($body, 200);
@@ -74,5 +76,6 @@ class CloudScraper implements ClientInterface
 
     public function setUserAgent($agent)
     {
+        $this->options['user_agent'] = $agent;
     }
 }
