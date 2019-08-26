@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e620c93b9e21971d3d6e376ae32d6b3",
+    "content-hash": "6d2e9b96a68a630e4ea4fc07d54b718c",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -77,12 +77,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "ca2892a8c2778c1821899fd2c79932e3b895f2ad"
+                "reference": "a7010cc9b52ecfa00051bb26e4ae025958fe9851"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ca2892a8c2778c1821899fd2c79932e3b895f2ad",
-                "reference": "ca2892a8c2778c1821899fd2c79932e3b895f2ad",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a7010cc9b52ecfa00051bb26e4ae025958fe9851",
+                "reference": "a7010cc9b52ecfa00051bb26e4ae025958fe9851",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +135,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2019-05-12T12:35:22+00:00"
+            "time": "2019-08-23T22:16:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -194,12 +194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
+                "reference": "2595b33c1c924889b474d324f3d719fa40b6954e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2595b33c1c924889b474d324f3d719fa40b6954e",
+                "reference": "2595b33c1c924889b474d324f3d719fa40b6954e",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +257,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-07-01T23:21:34+00:00"
+            "time": "2019-08-13T16:05:52+00:00"
         },
         {
             "name": "kevinlebrun/colors.php",
@@ -294,9 +294,9 @@
             "authors": [
                 {
                     "name": "Kevin Le Brun",
+                    "role": "developer",
                     "email": "lebrun.k@gmail.com",
-                    "homepage": "http://kevinlebrun.fr",
-                    "role": "developer"
+                    "homepage": "http://kevinlebrun.fr"
                 }
             ],
             "description": "Colors for PHP CLI scripts",
@@ -544,21 +544,24 @@
         },
         {
             "name": "vlucas/pikirasa",
-            "version": "v1.0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/pikirasa.git",
-                "reference": "bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde"
+                "reference": "13037864da08933eb716537cfac055d3735d1c16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/pikirasa/zipball/bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde",
-                "reference": "bb27ef66bceffba6c438d0fdd2a02bacbdaa3fde",
+                "url": "https://api.github.com/repos/vlucas/pikirasa/zipball/13037864da08933eb716537cfac055d3735d1c16",
+                "reference": "13037864da08933eb716537cfac055d3735d1c16",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0.0|^5.0.0"
             },
             "type": "library",
             "autoload": {
@@ -589,7 +592,7 @@
                 "public key",
                 "rsa"
             ],
-            "time": "2015-01-17T16:13:09+00:00"
+            "time": "2019-06-14T01:10:09+00:00"
         },
         {
             "name": "voku/php-hooks",
@@ -624,13 +627,13 @@
             "authors": [
                 {
                     "name": "Lars Moelleken",
-                    "homepage": "http://www.moelleken.org/",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://www.moelleken.org/"
                 },
                 {
                     "name": "Ohad Raz",
-                    "homepage": "https://github.com/bainternet",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "https://github.com/bainternet"
                 }
             ],
             "description": "A fork of the WordPress filters hook system rolled in to a class to be ported into any PHP-based system",
@@ -648,7 +651,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "vlucas/pikirasa": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
