@@ -1,0 +1,16 @@
+# HTTP Cookie File downloaded with cookies.txt by Genuinous @genuinous
+# This file can be used by wget, curl, aria2c and other standard compliant tools.
+# Usage Examples:
+#   1) wget -x --load-cookies cookies.txt "https://host.com/"
+#   2) curl --cookie cookies.txt "https://host.com/"
+#   3) aria2c --load-cookies cookies.txt "https://host.com/"
+#
+host.com	FALSE	/wp-content/plugins	FALSE	1568091546	wordpress_26059f564693c9ce0070db8f795af86a	Hai+ha%7C1568048345%7CiaRwppkXFnAEDqchYllHdIjAFQFyZsarXP9VqUzXPJf%7C693b161de54463bab6aa0114e1688f5e715b17aba2deaf32dc30b0a5427d1316
+host.com	FALSE	/wp-admin	FALSE	1568091546	wordpress_26059f564693c9ce0070db8f795af86a	Hai+ha%7C1568048345%7CiaRwppkXFnAEDqchYllHdIjAFQFyZsarXP9VqUzXPJf%7C693b161de54463bab6aa0114e1688f5e715b17aba2deaf32dc30b0a5427d1316
+.host.com	TRUE	/	TRUE	1597515019	__cfduid	d0e8e3f4b81b62c7b0367ccd0e290084d1565979019
+.host.com	TRUE	/	FALSE	1629910730	_ga	GA1.2.1991490846.1565979026
+.host.com	TRUE	/	FALSE	1566925130	_gid	GA1.2.1054082050.1566825610
+host.com	FALSE	/	TRUE	0	wordpress_test_cookie	WP+Cookie+check
+host.com	FALSE	/	FALSE	1568091546	_lscache_vary	05b78916d2270c56433637d7ed6e26aa
+host.com	FALSE	/	FALSE	1568091546	wordpress_logged_in_26059f564693c9ce0070db8f795af86a	Hai+ha%7C1568048345%7CiaRwppkXFnAEDqchYllHdIjAFQFyZsarXP9VqUzXPJf%7Cedba1b2f5901806c8bbe4173b707516f72934e9f83c164378af2ebf0d92cf89a
+.host.com	TRUE	/	FALSE	1566846279	cf_clearance	4e2e89a6240e922272ee91f96e7cf20b70060e10-1566840878-1800-150
