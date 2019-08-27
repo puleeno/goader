@@ -2,8 +2,8 @@
 namespace Puleeno\Goader\Hosts\com;
 
 use Cocur\Slugify\Slugify;
-use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Clients\Downloader\Wget;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
@@ -19,10 +19,18 @@ class Fanboylove extends Host
     public $chapterID;
 
     protected $useCloudScraper = true;
-    protected $useCookie = true;
+    protected $useCookieJar = true;
+    protected $supportLogin = true;
 
     protected function checkPageType()
     {
+        if (preg_match('/truyen\/([^\/]*)\/([^\/]*)?/', $this->url, $matches)) {
+            if (isset($matches[2])) {
+                return 2;
+            }
+            return 1;
+        }
+        return false;
     }
 
     public function download($directoryName = null)
@@ -30,40 +38,39 @@ class Fanboylove extends Host
         if (!empty($directoryName)) {
             $this->dirPrefix = $directoryName;
         }
-        $this->downloadManga();
+        $pageType = $this->checkPageType();
+        if ($pageType === 1) {
+            $this->downloadManga();
+        } elseif($pageType === 2) {
+            $this->downloadChapter();
+        } else {
+            $this->doNotSupport();
+        }
+    }
+
+    public function checkLoggedIn() {
+
     }
 
     public function downloadManga()
     {
-        $this->content = (string)$this->getContent();
-        $this->dom->load($this->content);
 
-        $domChapters = $this->dom->find('.list_chapter_comic ul.list_chapter a');
-        $chapters = array();
-        foreach ($domChapters as $chapter) {
-            $chapters[] = array(
-                'chapter_link' => sprintf(
-                    '%1$s://%2$s%3$s',
-                    $this->host['scheme'],
-                    $this->host['host'],
-                    $chapter->getAttribute('href')
-                ),
-                'chapter_text' => $chapter->text
-            );
+    }
+
+    public function detectExtension($fileName) {
+        $url = parse_url($fileName);
+        if ($url === 'fanbl.art') {
+            return 'webp';
         }
-        $chapters = array_reverse($chapters);
-
-        Logger::log(sprintf('This manga has %d chapters', count($chapters)));
-        Logger::log('Downloading...');
-
-        foreach ($chapters as $chapter) {
-            // Reset current index to 1 to start download the new chapter
-            Environment::setCurrentIndex(1);
-
-            $chapter_downloader = new self($chapter['chapter_link']);
-            $chapter_downloader->download($chapter['chapter_text']);
+        $ext = pathinfo(
+            $fileName,
+            PATHINFO_EXTENSION
+        );
+        if ($ext === '.js') {
+            return 'jpg';
         }
-        Logger::log('The manga is downloaded successfully!!');
+
+        return $ext;
     }
 
     public function downloadChapter()
@@ -79,7 +86,7 @@ class Fanboylove extends Host
             $this->data['file_name_prefix'] = $slugify->slugify($chapter_name);
         }
 
-        $images = $this->dom->find('.main_content_read img');
+        $images = $this->dom->find('.reading-content img');
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
@@ -89,13 +96,24 @@ class Fanboylove extends Host
 
 
         if ($total_images > 0) {
-            $httpClient = new Client();
+            $headers = [
+                'Referer'   => $this->url,
+                'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A356 Safari/604.1',
+            ];
+            $downloader = new Wget([
+                'headers' => $headers,
+            ]);
+            $currentIndex = Environment::getCurrentIndex();
             foreach ($images as $index => $image) {
                 try {
                     Logger::log(sprintf('The image %s is downloading...', $index + 1));
-                    $image_url = $this->formatLink($image->getAttribute('src'));
+                    $image_url = $this->formatLink($image->getAttribute('data-src'));
+                    if (empty($image_url)) {
+                        continue;
+                    }
                     $fileName = $this->generateFileName($image_url);
-                    $this->getContent($image_url, $httpClient)->saveFile($fileName);
+                    $downloader->getContent($image_url, $fileName);
+                    Environment::setCurrentIndex(++$currentIndex);
                 } catch (\Exception $e) {
                     Logger::log($e->getMessage());
                 }
