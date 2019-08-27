@@ -18,7 +18,7 @@ class TruyenDoc extends Host
     public $mangaID;
     public $chapterID;
 
-    protected $useCookie = true;
+    protected $useCookieJar = true;
 
     protected function checkPageType()
     {
