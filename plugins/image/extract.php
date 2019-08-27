@@ -42,6 +42,11 @@ Hook::add_action('goader_init', function () {
         $command->option('b')
             ->aka('begin')
             ->describedAs('Naming start with the number');
+
+        $command->option('a')
+            ->aka('all')
+            ->describedAs('Extract all layers to file')
+            ->boolean();
     }
 
     Hook::add_filter('register_goader_command', 'goader_core_register_image_extract_command', 10, 2);

@@ -95,7 +95,7 @@ class Extract
 
         foreach ($files as $file) {
             // $extension
-            if ($extension == 'psd' || $extension == 'psb') {
+            if (in_array($extension, Hook::apply_filters('goader_bitmap_image_extension', array('psd', 'psb', 'tif')))) {
                 $this->extractPSD($file, $layers);
             } else {
                 $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
@@ -112,15 +112,23 @@ class Extract
             $layers = 1000;
         }
 
-        for ($i = 1; $i <= $layers; $i++) {
+        $allLayer = $this->options['all']->getValue();
+        if ($allLayer) {
             $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
-            $command = $this->buildCommand($file . "[{$i}]", $fileName);
-
-            if (!$this->executeCommand($command)) {
-                $this->cleanErrorOutput($this->currentIndex);
-                break;
-            }
+            $command = $this->buildCommand($file . "[0]", $fileName);
+            $this->executeCommand($command);
             $this->currentIndex++;
+        } else {
+            for ($i = 1; $i <= $layers; $i++) {
+                $fileName = sprintf('%s/%s', $this->outputDir, $this->currentIndex);
+                $command = $this->buildCommand($file . "[{$i}]", $fileName);
+
+                if (!$this->executeCommand($command)) {
+                    $this->cleanErrorOutput($this->currentIndex);
+                    break;
+                }
+                $this->currentIndex++;
+            }
         }
     }
 
@@ -142,7 +150,6 @@ class Extract
         if (is_array($input)) {
             $input = sprintf('"%s"', implode('" "', $input));
         }
-        Logger::log();
         return sprintf(
             '%s "%s" "%s.%s"',
             self::CONVERT_TOOL,
