@@ -22,6 +22,9 @@ Hook::add_action('goader_init', function () {
         $command->option('b')
             ->aka('begin')
             ->describedAs('The number use to start index of file name');
+        $command->option('e')
+            ->aka('extension')
+            ->describedAs('Search file name with extension');
 
         $command->option('j')
             ->aka('jump')

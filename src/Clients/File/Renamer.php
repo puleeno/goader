@@ -47,8 +47,15 @@ class Renamer
 
     public function run()
     {
-        $extension = $this->selectExtension(Environment::getExtenions());
-        $files = glob(sprintf('*.%s', $extension));
+        $extension = $this->options['extension']->getValue();
+        if(empty($extension)) {
+            $extension = $this->selectExtension(Environment::getExtenions());
+        }
+        $files = glob(
+            sprintf('*.{%s}', preg_replace('/\s/', '', $extension)),
+            GLOB_BRACE
+        );
+
         natsort($files);
 
         foreach ($files as $file) {
