@@ -42,7 +42,7 @@ class Config
         if (!$this->validateAccount($command[2], $command[3])) {
             exit(sprintf('Please input account for host %s', $host));
         }
-        $optionFile = sprintf('%s/.goader/accounts', Environment::getUserHomeDir());
+        $optionFile = sprintf('%s/accounts.dat', Environment::getUserGoaderDir());
         $options = array();
         if (file_exists($optionFile)) {
             $options = unserialize(file_get_contents($optionFile));
