@@ -54,7 +54,6 @@ class CloudScraper implements ClientInterface
 
     public function executeCommand($command)
     {
-        var_dump($command);die;
         exec($command, $output);
         return implode("\n", $output);
     }

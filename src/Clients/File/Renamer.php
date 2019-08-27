@@ -48,7 +48,7 @@ class Renamer
     public function run()
     {
         $extension = $this->options['extension']->getValue();
-        if(empty($extension)) {
+        if (empty($extension)) {
             $extension = $this->selectExtension(Environment::getExtenions());
         }
         $files = glob(

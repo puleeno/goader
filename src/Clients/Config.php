@@ -1,6 +1,6 @@
 <?php
-
 namespace Puleeno\Goader\Clients;
+
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Encryption;
@@ -20,12 +20,13 @@ class Config
         $this->options = Command::getCommand()->getOptions();
     }
 
-    public function run() {
+    public function run()
+    {
         $command = array_shift($this->commands);
         if (!in_array($command, $this->supported)) {
             exit(sprintf('Command %s is not supported', $command));
         }
-        if(empty($this->commands)) {
+        if (empty($this->commands)) {
             exit(sprintf('Please input your %s configs', $command));
         }
         $this->$command();
@@ -56,11 +57,13 @@ class Config
         fclose($h);
     }
 
-    protected function validateHost($host) {
+    protected function validateHost($host)
+    {
         return is_int(strpos($host, '.'));
     }
 
-    protected function validateAccount($account, $password) {
+    protected function validateAccount($account, $password)
+    {
         if (empty($account) || empty($password)) {
             return false;
         }
