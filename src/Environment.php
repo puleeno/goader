@@ -8,6 +8,7 @@ final class Environment
     private static $instance;
 
     public $goaderDir;
+    public $goaderDataDir;
     public $userHomeDir;
     public $workDir;
 
@@ -18,9 +19,14 @@ final class Environment
     public function __construct()
     {
         $goaderBinDir = dirname(GOADER_MAIN_BIN_FILE);
-
         $this->goaderDir = dirname($goaderBinDir);
-        $this->userHomeDir = getenv('HOME');
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->userHomeDir = sprintf('%s%s', getenv('HOMEDRIVE'), getenv('HOMEPATH'));
+        } else {
+            $this->userHomeDir = getenv('HOME');
+        }
+
         $this->workDir = getcwd();
         $this->currentIndex = 1;
     }
@@ -63,13 +69,13 @@ final class Environment
     {
         return sprintf(
             '%s/.goader',
-            self::userHomeDir()
+            self::getUserHomeDir()
         );
     }
 
     public static function getCookiesDir()
     {
-        return sprintf('%s/cookies', self::getUserGoaderDir());
+        return sprintf('%s/cookies.dat', self::getUserGoaderDir());
     }
 
     public static function getCommandArgs()
