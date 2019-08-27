@@ -20,7 +20,7 @@ class CloudScraper implements ClientInterface
 
     public function getNodeBinary()
     {
-        if (empty($node = getenv('GLOADER_NODE_BINARY'))) {
+        if (empty($node = getenv('GOADER_NODE_BINARY'))) {
             return 'node';
         }
         return $node;
@@ -34,10 +34,17 @@ class CloudScraper implements ClientInterface
         );
     }
 
-    protected function buildCommand($commandArgs)
+    protected function buildCommand($uri, $commandArgs)
     {
         $command = '';
         foreach ($commandArgs as $key => $val) {
+            switch (gettype($val)) {
+                case 'array':
+                case 'object':
+                    $val = '\'' . json_encode($val) . '\'';
+                    break;
+            }
+
             if (is_string($key)) {
                 $command .= sprintf(' --%s=%s', $key, $val);
             } else {
@@ -45,10 +52,11 @@ class CloudScraper implements ClientInterface
             }
         }
         return sprintf(
-            '%s "%s" %s',
+            '%s "%s" request %s "%s"',
             $this->getNodeBinary(),
             $this->getBinary(),
-            ltrim($command)
+            ltrim($command),
+            $uri
         );
     }
 
@@ -63,11 +71,10 @@ class CloudScraper implements ClientInterface
         $this->options = array_merge($this->options, $options);
         $this->options = array_merge($this->options, [
             'method' => $method,
-            'uri' => $uri,
         ]);
 
-        $command = $this->buildCommand($this->options);
-        $body = $this->executeCommand($command);
+        $command = $this->buildCommand($uri, $this->options);
+        $body    = $this->executeCommand($command);
 
         $res = new Response($body, 200);
         return $res;
