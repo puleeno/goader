@@ -18,8 +18,12 @@ abstract class Host implements HostInterface
     protected $host;
     protected $content;
 
-    protected $useCookie = false;
+    protected $useCookieJar = false;
     protected $useCloudScraper = false;
+    protected $supportLogin = false;
+    protected $isLoggedIn = false;
+    protected $requiredLoggin = false;
+
     protected $cookieJar;
     protected $dirPrefix;
     protected $dom;
@@ -38,8 +42,14 @@ abstract class Host implements HostInterface
 
         $this->dom = new Dom();
 
-        if ($this->useCookie) {
-            // $this->loadCookie();
+        if ($this->supportLogin) {
+            $this->useCookieJar = true;
+            $this->isLoggedIn = $this->checkLoggedin();
+        }
+        if ($this->requiredLoggin && empty($this->isLoggedIn)) {
+            exit(
+                sprintf( 'The host %s required loggin to download.', $this->host['host'])
+            );
         }
     }
 
@@ -53,6 +63,31 @@ abstract class Host implements HostInterface
         return $this::NAME;
     }
 
+    protected function getCookieJar()
+    {
+        $cookieJarFile = sprintf(
+            '%s/hosts/%s.json',
+            Environment::getUserGoaderDir(),
+            Hook::apply_filters(
+                'goader_extract_cookie_jar_file_name', $this->host['host']
+            )
+        );
+        $this->cookieJar = $cookieJarFile;
+        if (!file_exists($this->cookieJar)) {
+            $dir = dirname($this->cookieJar);
+            if(!file_exists($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            $h = fopen($this->cookieJar, 'w+');
+            fwrite($h, '');
+            fclose($h);
+        }
+        return $this->cookieJar;
+    }
+
+    public function checkLoggedin()
+    {
+    }
 
     public function getContent($url = '', $client = null, $method = 'GET', $options = array())
     {
@@ -61,14 +96,18 @@ abstract class Host implements HostInterface
         }
         $currentClass = get_class($this);
 
-
         $newInstance = new $currentClass($url);
 
         if (is_null($client)) {
             if (!empty($this->useCloudScraper)) {
                 $client = new Cloudscraper();
+                $jar = $this->getCookieJar();
             } else {
                 $client = new Client();
+                $jar = new FileCookieJar($this->getCookieJar(), true);
+            }
+            if ($this->useCookieJar) {
+                $options['cookies'] = $jar;
             }
         }
 
@@ -111,7 +150,7 @@ abstract class Host implements HostInterface
         $command = Command::getCommand();
 
         if ($command['sequence']) {
-            $extension = $this->detecttExtension($originalName);
+            $extension = $this->detectExtension($originalName);
             $currentIndex = Environment::getCurrentIndex();
             $fileName = Hook::apply_filters(
                 'image_sequence_file_name',
@@ -154,7 +193,7 @@ abstract class Host implements HostInterface
         );
     }
 
-    public function detecttExtension($filename)
+    public function detectExtension($filename)
     {
         return pathinfo(
             $filename,
