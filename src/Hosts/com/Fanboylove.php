@@ -58,15 +58,11 @@ class Fanboylove extends Host
     }
 
     public function detectExtension($fileName) {
-        $url = parse_url($fileName);
-        if ($url === 'fanbl.art') {
-            return 'webp';
-        }
         $ext = pathinfo(
             $fileName,
             PATHINFO_EXTENSION
         );
-        if ($ext === '.js') {
+        if ($ext === 'js') {
             return 'jpg';
         }
 
