@@ -52,14 +52,6 @@ class Iqiyi extends Host
         }
     }
 
-    protected function makeChapterNum($text)
-    {
-        if (preg_match('/(\d{1,})/', $text, $matches)) {
-            return sprintf('Chap %s', $matches[1]);
-        }
-        return $text;
-    }
-
     public function downloadManga()
     {
         $this->content = (string)$this->getContent();
@@ -70,7 +62,7 @@ class Iqiyi extends Host
         foreach ($domChapters as $chapter) {
             $chapters[] = array(
                 'chapter_link' => sprintf('%s://%s%s', $this->host['scheme'], $this->host['host'], $chapter->getAttribute('href')),
-                'chapter_text' => $this->makeChapterNum($chapter->find('span.itemcata-title')->text)
+                'chapter_text' => trim($chapter->find('span.itemcata-title')->text)
             );
         }
 
