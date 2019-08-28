@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d2e9b96a68a630e4ea4fc07d54b718c",
+    "content-hash": "97642e071f37811ed30301a5ac304665",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -309,6 +309,51 @@
                 "shell"
             ],
             "time": "2014-12-23T01:23:37+00:00"
+        },
+        {
+            "name": "mck89/peast",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mck89/peast.git",
+                "reference": "66e9faf0f99e0f01aaae4c1fe54134b77bdf8876"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mck89/peast/zipball/66e9faf0f99e0f01aaae4c1fe54134b77bdf8876",
+                "reference": "66e9faf0f99e0f01aaae4c1fe54134b77bdf8876",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Peast\\": "lib/Peast/",
+                    "Peast\\test\\": "test/Peast/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Marchiò",
+                    "email": "marco.mm89@gmail.com"
+                }
+            ],
+            "description": "Peast is PHP library that generates AST for JavaScript code",
+            "time": "2019-08-16T15:00:13+00:00"
         },
         {
             "name": "nategood/commando",
@@ -652,7 +697,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "vlucas/pikirasa": 20
+        "vlucas/pikirasa": 20,
+        "mck89/peast": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
