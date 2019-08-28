@@ -7,7 +7,7 @@ class Wget {
     protected $options = [];
     protected $supportedOptions = [];
 
-    public function __construct($options) {
+    public function __construct($options = []) {
         $this->options = $options;
         $this->supported_options = Hook::apply_filters('goader_wget_client_supported_options', [
             'header',
