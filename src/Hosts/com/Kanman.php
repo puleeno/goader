@@ -62,14 +62,6 @@ class Kanman extends Host
         }
     }
 
-    protected function makeChapterNum($text)
-    {
-        if (preg_match('/(\d{1,})/', $text, $matches)) {
-            return sprintf('Chap %s', $matches[1]);
-        }
-        return $text;
-    }
-
     public function downloadManga()
     {
         $this->content = (string)$this->getContent();
@@ -79,7 +71,7 @@ class Kanman extends Host
         foreach ($domChapters as $chapter) {
             $chapters[] = array(
                 'chapter_link' => sprintf('%s://%s%s', $this->host['scheme'], $this->host['host'], $chapter->getAttribute('href')),
-                'chapter_text' => $this->makeChapterNum($chapter->find('p.name')->text)
+                'chapter_text' => trim($chapter->find('p.name')->text),
             );
         }
 
@@ -93,37 +85,6 @@ class Kanman extends Host
             $chapter_downloader->download($chapter['chapter_text']);
         }
         Logger::log('The manga is downloaded successfully!!');
-    }
-
-    public function preparingJsonStr($str)
-    {
-        $json = $str;
-        $pos = strpos($str, 'return');
-        $searchPatterns = array();
-        $replaces = array();
-
-        if (is_numeric($pos)) {
-            $json = substr($str, 0, $pos);
-            $json = rtrim($json, ';');
-            $json .= '}';
-            $searchPatterns = array(
-                '/\w\[(\d{1,})\]="/',
-                '/";/'
-            );
-            $replaces = array(
-                '"$1": "',
-                '",'
-            );
-        } else {
-            $searchPatterns = array(
-                '/(width|height):[^,]*,\n?/',
-                '/(url)/'
-            );
-            $replaces = array('', '"$1"');
-        }
-
-        $json = preg_replace($searchPatterns, $replaces, $json);
-        return $json;
     }
 
     public function getImagesFromComicInfo($comicInfo)
