@@ -13,16 +13,18 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "php": ">=5.4",
+        "ext-openssl": "*",
         "guzzlehttp/guzzle": "~6.0",
         "nategood/commando": "~0.3.0",
         "voku/php-hooks": "~0.2.11",
         "paquettg/php-html-parser": "^2.0.2",
         "cocur/slugify": "^3.2",
-        "vlucas/pikirasa": "dev-master",
         "mck89/peast": "dev-master"
     },
     "autoload": {
         "psr-4": {
+            "Pikirasa\\": "thirdparty/Pikirasa",
             "Puleeno\\Goader\\": "src/"
         }
     },
