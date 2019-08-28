@@ -20,7 +20,7 @@
         "voku/php-hooks": "~0.2.11",
         "paquettg/php-html-parser": "^2.0.2",
         "cocur/slugify": "^3.2",
-        "mck89/peast": "dev-master"
+        "mck89/peast": "~1.9.2"
     },
     "autoload": {
         "psr-4": {

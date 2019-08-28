@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "becbc3d6fae75a13ace829eb2c0886e3",
+    "content-hash": "85bb463d05dfefcc0b5580fab7530eb4",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -311,16 +311,16 @@
         },
         {
             "name": "mck89/peast",
-            "version": "dev-master",
+            "version": "v1.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mck89/peast.git",
-                "reference": "66e9faf0f99e0f01aaae4c1fe54134b77bdf8876"
+                "reference": "7c9e487a0bb2410b3b7f27e8274cd04248b68197"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mck89/peast/zipball/66e9faf0f99e0f01aaae4c1fe54134b77bdf8876",
-                "reference": "66e9faf0f99e0f01aaae4c1fe54134b77bdf8876",
+                "url": "https://api.github.com/repos/mck89/peast/zipball/7c9e487a0bb2410b3b7f27e8274cd04248b68197",
+                "reference": "7c9e487a0bb2410b3b7f27e8274cd04248b68197",
                 "shasum": ""
             },
             "require": {
@@ -352,7 +352,7 @@
                 }
             ],
             "description": "Peast is PHP library that generates AST for JavaScript code",
-            "time": "2019-08-16T15:00:13+00:00"
+            "time": "2019-05-24T16:47:14+00:00"
         },
         {
             "name": "nategood/commando",
@@ -643,9 +643,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "mck89/peast": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
