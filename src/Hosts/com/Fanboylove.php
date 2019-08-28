@@ -41,23 +41,23 @@ class Fanboylove extends Host
         $pageType = $this->checkPageType();
         if ($pageType === 1) {
             $this->downloadManga();
-        } elseif($pageType === 2) {
+        } elseif ($pageType === 2) {
             $this->downloadChapter();
         } else {
             $this->doNotSupport();
         }
     }
 
-    public function checkLoggedIn() {
-
+    public function checkLoggedIn()
+    {
     }
 
     public function downloadManga()
     {
-
     }
 
-    public function detectExtension($fileName) {
+    public function detectExtension($fileName)
+    {
         $ext = pathinfo(
             $fileName,
             PATHINFO_EXTENSION
