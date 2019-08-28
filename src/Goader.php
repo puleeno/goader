@@ -80,7 +80,9 @@ class Goader
 
             call_user_func($runner);
         } else {
-            $this->doNotSupportCommand($commandArgs[0]);
+            if (isset($commandArgs[0])) {
+                $this->doNotSupportCommand($commandArgs[0]);
+            }
         }
     }
 
