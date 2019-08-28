@@ -10,7 +10,6 @@
             "email": "puleeno@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "nategood/commando": "~0.3.0",
