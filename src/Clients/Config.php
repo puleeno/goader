@@ -10,6 +10,9 @@ class Config
     protected $supported = ['account', 'host', 'core'];
     protected $commands   = [];
     protected $options = [];
+    protected $configIsLoaded = false;
+    protected $configs = [];
+
 
     public function __construct($commands)
     {
@@ -18,6 +21,10 @@ class Config
         }
         $this->commands = $commands;
         $this->options = Command::getCommand()->getOptions();
+        if (!$this->configIsLoaded) {
+            $this->getAllConfigs();
+            $this->configIsLoaded = true;
+        }
     }
 
     public function run()
@@ -81,5 +88,9 @@ class Config
 
     public function core()
     {
+    }
+
+    public function getConfig($name, $defaultValue = false) {
+        $config_nodes = explode('.', $name);
     }
 }
