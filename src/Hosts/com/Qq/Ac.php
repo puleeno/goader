@@ -118,12 +118,13 @@ class Ac extends Host
         }
         $T = implode('', $T);
 
-        var_dump($json);die;
+        var_dump($json);
+        die;
 
         $images = [];
         $this->dom->load($content);
         $dom_images = $this->dom->find('#comicContain li img');
-        foreach($dom_images as $dom_image) {
+        foreach ($dom_images as $dom_image) {
             $images[] = $dom_image->getAttribute('src');
         }
         return $images;
@@ -178,7 +179,8 @@ class Ac extends Host
         return $link;
     }
 
-    function _utf8_decode($c) {
+    function _utf8_decode($c)
+    {
         $a = "";
         $d = $c1 = $c2 = 0;
         for ($b = 0; $b < strlen($c);) {
@@ -187,24 +189,24 @@ class Ac extends Host
             if (128 > $d) {
                 $a += chr($d);
                 $b++;
-            }
-            else {
+            } else {
                 if (191 < $d && 224 > $d) {
                     $c2 = $c{$b + 1};
                     $a += chr(($d & 31) << 6 | $c2 & 63);
                     $b += 2;
-                 } else {
+                } else {
                     $c2 = ord($c{$b + 1});
                     $c3 = ord($c{$b + 2});
                     $a += chr(($d & 15) << 12 | ($c2 & 63) << 6 | $c3 & 63);
                     $b += 3;
-                 };
+                };
             }
         }
         return $a;
     }
 
-    function _decode($c) {
+    function _decode($c)
+    {
         $_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
         $a = "";
         $b;
@@ -218,7 +220,7 @@ class Ac extends Host
 
         $c = preg_replace('/[^A-Za-z0-9\+\/\=]/', '', $c);
 
-        for ($c; $e < strlen($c);){
+        for ($c; $e < strlen($c);) {
             $char1 = $c{$e++};
             $b = strpos($_keyStr, $char1);
 

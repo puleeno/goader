@@ -83,7 +83,7 @@ class Iqiyi extends Host
         $images = [];
         $this->dom->load($content);
         $dom_images = $this->dom->find('ul.main-container li.main-item img');
-        foreach($dom_images as $dom_image) {
+        foreach ($dom_images as $dom_image) {
             $images[] = $dom_image->getAttribute('data-original');
         }
         return $images;

@@ -90,7 +90,8 @@ class Config
     {
     }
 
-    public function getConfig($name, $defaultValue = false) {
+    public function getConfig($name, $defaultValue = false)
+    {
         $config_nodes = explode('.', $name);
     }
 }

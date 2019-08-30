@@ -7,7 +7,7 @@ Hook::add_action('goader_init', function () {
     function register_default_config_command_options($options)
     {
         $command = Command::getCommand();
-        foreach($options as $option => $args) {
+        foreach ($options as $option => $args) {
             $o = $command->option($option);
             if (!empty($args['alias'])) {
                 $o->aka($args['alias']);

@@ -48,7 +48,7 @@ abstract class Host implements HostInterface
         }
         if ($this->requiredLoggin && empty($this->isLoggedIn)) {
             exit(
-                sprintf( 'The host %s required loggin to download.', $this->host['host'])
+                sprintf('The host %s required loggin to download.', $this->host['host'])
             );
         }
     }
@@ -69,13 +69,14 @@ abstract class Host implements HostInterface
             '%s/hosts/%s.json',
             Environment::getUserGoaderDir(),
             Hook::apply_filters(
-                'goader_extract_cookie_jar_file_name', $this->host['host']
+                'goader_extract_cookie_jar_file_name',
+                $this->host['host']
             )
         );
         $this->cookieJar = $cookieJarFile;
         if (!file_exists($this->cookieJar)) {
             $dir = dirname($this->cookieJar);
-            if(!file_exists($dir)) {
+            if (!file_exists($dir)) {
                 mkdir($dir, 0755, true);
             }
             $h = fopen($this->cookieJar, 'w+');
