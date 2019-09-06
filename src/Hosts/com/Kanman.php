@@ -98,6 +98,7 @@ class Kanman extends Host
             $format = str_replace('$$', '%s', $comicInfo->current_chapter->rule) . '%s';
             for ($i=$startFrom; $i<= $totalChapterImages; $i++) {
                 $fileName = sprintf($format, $i, '-noresize');
+                $fileName = str_replace('%2F', '/', urlencode($fileName));
                 $images[] = sprintf('%s://%s%s', $this->host['scheme'], $domain, $fileName);
             }
         }
@@ -153,7 +154,7 @@ class Kanman extends Host
                 try {
                     Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image));
                     $image_url = $this->formatLink($image);
-                    if (!$this->validateLink($image_url)) {
+                    if (!$this->validateLink    ($image_url)) {
                         Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
                         continue;
                     }
@@ -176,7 +177,7 @@ class Kanman extends Host
     public function formatLink($originalUrl)
     {
         $link = $originalUrl;
-        $pre = Hook::apply_filters('u17_filter_image_link', false, $link);
+        $pre = Hook::apply_filters('kanman_filter_image_link', false, $link);
         if ($pre) {
             return $pre;
         }
