@@ -2,8 +2,10 @@
 namespace Puleeno\Goader\Clients;
 
 use Puleeno\Goader\Command;
-use Puleeno\Goader\Environment;
 use Puleeno\Goader\Encryption;
+use Puleeno\Goader\Environment;
+use Puleeno\Goader\Logger;
+use Puleeno\Goader\Transfomers\CookieJar as CookieJarTransformer;
 
 class Config
 {
@@ -13,6 +15,15 @@ class Config
     protected $configIsLoaded = false;
     protected $configs = [];
 
+    protected static $instance;
+
+    public static function getInstance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self('client');
+        }
+        return self::$instance;
+    }
 
     public function __construct($commands)
     {
@@ -84,14 +95,98 @@ class Config
      */
     public function host()
     {
+        $command = Command::getCommand();
+        $name = $this->options['name']->getValue();
+        if (!$this->validateHost($name)) {
+            exit('The host name has invalid format');
+        }
+        $cookieJar = '';
+        if (($cookiesTxt = $this->options['load-cookies']->getValue())) {
+            if (!file_exists($cookiesTxt)) {
+                Logger::log(sprintf('File %s is not exists', $cookiesTxt));
+                exit;
+            }
+            $cookiesContent = file_get_contents($cookiesTxt);
+            $transformer = new CookieJarTransformer($cookiesContent);
+            $cookieJar = $transformer->convertToCookieJar();
+        }
+        if (($cookiejarFile = $this->options['load-cookiejar']->getValue())) {
+            if (!file_exists($cookiejarFile)) {
+                Logger::log(sprintf('File %s is not exists', $cookiejarFile));
+                exit;
+            }
+            $cookiesContent = file_get_contents($cookiejarFile);
+            if (!json_decode($cookiesContent)) {
+                Logger::log('Your cookiejar is invalid');
+                exit;
+            }
+            $cookieJar = $cookiesContent;
+        }
+
+        if (empty($cookieJar)) {
+            Logger::error('Please check the cookies content files');
+            exit;
+        }
+        $cookieJarFile = sprintf('%s/hosts/%s.json', Environment::getUserGoaderDir(), 'lezhin.com');
+        $h = fopen($cookieJarFile, 'w');
+        fwrite($h, $cookieJar);
+        fclose($h);
     }
 
     public function core()
     {
     }
 
-    public function getConfig($name, $defaultValue = false)
+    public function getConfig($type, $name, $defaultValue = false)
     {
-        $config_nodes = explode('.', $name);
+        if (isset($this->configs[$type])) {
+            $config_nodes = explode('.', $name);
+            $value = $this->configs[$type];
+            foreach ($config_nodes as $node) {
+                if (!isset($value[$node])) {
+                    $value = $defaultValue;
+                    return $defaultValue;
+                }
+                $value = $value[$node];
+            }
+            return $value;
+        }
+        return $defaultValue;
+    }
+
+    public static function get()
+    {
+        return call_user_func_array(
+            array(
+                self::getInstance(),
+                'getConfig'
+            ),
+            func_get_args()
+        );
+    }
+
+    public function getAllConfigs()
+    {
+        $configFiles = glob(sprintf('%s/*.dat', Environment::getUserGoaderDir()));
+        foreach ($configFiles as $configFile) {
+            $configContent = file_get_contents($configFile);
+            $configs = unserialize($configContent);
+            $host = rtrim(basename($configFile), '.dat');
+            foreach ($configs as $key => $groups) {
+                $this->combineConfig($host, $groups, $this->configs[$key]);
+            }
+        }
+        return $this->configs;
+    }
+
+    protected function combineConfig($key, $groups, &$configs)
+    {
+        if (isset($configs[$key]) && is_array($groups)) {
+            foreach ($groups as $key => $new_group) {
+                $this->combineConfig($key, $new_group, $configs[$key]);
+            }
+        } else {
+            $configs[$key]= $groups;
+        }
     }
 }

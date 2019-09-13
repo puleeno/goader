@@ -23,8 +23,8 @@ abstract class Host implements HostInterface
     protected $supportLogin = false;
     protected $isLoggedIn = false;
     protected $requiredLoggin = false;
-
-    protected $cookieJar;
+    protected $http_client;
+    protected $cookieJarFile;
     protected $dirPrefix;
     protected $dom;
     protected $defaultExtension = 'jpg';
@@ -39,7 +39,11 @@ abstract class Host implements HostInterface
         } else {
             $this->host = $host;
         }
-
+        if (!empty($this->useCloudScraper)) {
+            $this->http_client = new Cloudscraper();
+        } else {
+            $this->http_client = new Client();
+        }
         $this->dom = new Dom();
 
         if ($this->supportLogin) {
@@ -47,9 +51,14 @@ abstract class Host implements HostInterface
             $this->isLoggedIn = $this->checkLoggedin();
         }
         if ($this->requiredLoggin && empty($this->isLoggedIn)) {
-            exit(
-                sprintf('The host %s required loggin to download.', $this->host['host'])
-            );
+            Logger::log(sprintf('Loggin to %s...', $this->host['host']));
+            if (!$this->loggin()) {
+                exit(
+                    sprintf('The host %s required loggin to download.', $this->host['host'])
+                );
+            } else {
+                Logger::log('Logged in!');
+            }
         }
     }
 
@@ -63,6 +72,14 @@ abstract class Host implements HostInterface
         return $this::NAME;
     }
 
+    public function getHostName()
+    {
+        if (empty($this->host)) {
+            return $this->getName();
+        }
+        return ltrim($this->host['host'], 'www.');
+    }
+
     protected function getCookieJar()
     {
         $cookieJarFile = sprintf(
@@ -73,17 +90,21 @@ abstract class Host implements HostInterface
                 $this->host['host']
             )
         );
-        $this->cookieJar = $cookieJarFile;
-        if (!file_exists($this->cookieJar)) {
-            $dir = dirname($this->cookieJar);
+        $this->cookieJarFile = $cookieJarFile;
+        if (!file_exists($this->cookieJarFile)) {
+            $dir = dirname($this->cookieJarFile);
             if (!file_exists($dir)) {
                 mkdir($dir, 0755, true);
             }
-            $h = fopen($this->cookieJar, 'w+');
+            $h = fopen($this->cookieJarFile, 'w+');
             fwrite($h, '');
             fclose($h);
         }
-        return $this->cookieJar;
+        return $this->cookieJarFile;
+    }
+
+    public function loggin()
+    {
     }
 
     public function checkLoggedin()
@@ -95,39 +116,23 @@ abstract class Host implements HostInterface
         if (empty($url)) {
             $url = $this->url;
         }
-        $currentClass = get_class($this);
-
-        $newInstance = new $currentClass($url);
-
-        if (is_null($client)) {
-            if (!empty($this->useCloudScraper)) {
-                $client = new Cloudscraper();
-                $jar = $this->getCookieJar();
-            } else {
-                $client = new Client();
-                $jar = new FileCookieJar($this->getCookieJar(), true);
-            }
-            if ($this->useCookieJar) {
-                $options['cookies'] = $jar;
-            }
-        }
-
+        $options = array_merge($this->defaultHttpClientOptions(), $options);
         try {
-            $res = $client->request(
+            $res = $client ? $client->request(
+                $method,
+                $url,
+                $options
+            ) : $this->http_client->request(
                 $method,
                 $url,
                 $options
             );
-
-            if ($res->getStatusCode() < 400) {
-                $newInstance->content = (string)$res->getBody();
-            }
+            $this->content = (string)$res->getBody();
         } catch (\Exception $e) {
             Logger::log(sprintf('Error when download #%d with URL %s', Environment::getCurrentIndex(), $url));
             // $e->getMessage();
         }
-
-        return $newInstance;
+        return $this;
     }
 
     public function saveFile($filePath)
@@ -209,7 +214,7 @@ abstract class Host implements HostInterface
 
     public function getCookieJarFile()
     {
-        $cookieFileName = ltrim(get_class($this), 'Puleeno\Goader\Hosts\\');
+        $cookieFileName = $this->getHostName();
         $cookieFile = sprintf(
             '%s/%s.cookie',
             Environment::getCookiesDir(),
@@ -217,6 +222,16 @@ abstract class Host implements HostInterface
         );
 
         return $cookieFile;
+    }
+
+    public function defaultHttpClientOptions()
+    {
+        $options = [];
+        $jar = $this->useCloudScraper ? $this->getCookieJar() : new FileCookieJar($this->getCookieJar(), true);
+        if ($this->useCookieJar) {
+            $options['cookies'] = $jar;
+        }
+        return $options;
     }
 
     public function getDirPrefix()

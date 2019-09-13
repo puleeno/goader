@@ -12,7 +12,7 @@ class Logger
         if (in_array($name, array('log', 'info', 'warning', 'success', 'error'))) {
             if ($name !== 'log' && !empty($args[0])) {
                 $message = $args[0];
-                $args[0] = sprintf('[%s]%s%s', strtoupper($name), date("yyyy-MM-dd'T'HH:mm:ss*SSSZZZZ"));
+                $args[0] = sprintf('[%s]%s ', strtoupper($name), date("yyyy-MM-dd'T'HH:mm:ss*SSSZZZZ"));
 
                 if (!empty($args[1])) {
                     $args[0] .= sprintf(',%s ', $args[1]);

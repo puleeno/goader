@@ -40,6 +40,11 @@ Hook::add_action('goader_init', function () {
                         ),
                     ),
                     'host' => array(
+                        'name' => array(
+                            'alias' => 'n',
+                            'required' => true,
+                            'description' => 'The host name',
+                        ),
                         'load-cookies' => array(
                             'required' => false,
                             'description' => 'Load cookies.txt into host',

@@ -154,7 +154,7 @@ class Kanman extends Host
                 try {
                     Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image));
                     $image_url = $this->formatLink($image);
-                    if (!$this->validateLink    ($image_url)) {
+                    if (!$this->validateLink($image_url)) {
                         Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
                         continue;
                     }

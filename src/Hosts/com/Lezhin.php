@@ -3,18 +3,26 @@ namespace Puleeno\Goader\Hosts\com;
 
 use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
+use Puleeno\Goader\Clients\Config;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
+use Puleeno\Goader\Encryption;
 
 class Lezhin extends Host
 {
     const NAME = 'lezhin';
+    const LOGIN_END_POINT = 'en/login/submit';
     const CHAPTER_URL_FORMAT = '%s://www.%s/api/v2/inventory_groups/comic_viewer' .
         '?platform=web&store=web&alias=loveshuttle&name=5&preload=true&type=comic_episode';
 
+    protected $supportLogin = true;
+    protected $isLoggedIn = false;
+    protected $requiredLoggin = true;
     protected $dom;
+    protected $csrf_token;
+
     public $mangaID;
     public $chapterID;
 
@@ -130,6 +138,7 @@ class Lezhin extends Host
                     }
 
                     $fileName = $this->generateFileName($image_url, false);
+
                     $this->getContent($image_url, $httpClient)->saveFile($fileName);
                 } catch (\Exception $e) {
                     Logger::log($e->getMessage());
@@ -152,5 +161,39 @@ class Lezhin extends Host
             return $pre;
         }
         return $link;
+    }
+
+    public function loggin()
+    {
+        $account = Config::get($this->getHostName(), 'accounts');
+        if (empty($account)) {
+            return false;
+        }
+        $login_url = sprintf('%s://%s/%s', $this->host['scheme'], $this->host['host'], self::LOGIN_END_POINT);
+        $postdata = [
+            'utf8' => '✓',
+            'authenticity_token' => $this->csrf_token,
+            'redirect' => '',
+            'username' => $account['account'],
+            'password' => Encryption::decrypt($account['password']),
+            'remember_me' => 'on',
+        ];
+        $options = array_merge($this->defaultHttpClientOptions(), array(
+            'form_params' => $postdata,
+        ));
+        $response = $this->http_client->post($login_url, $options);
+        $this->getContent();
+    }
+
+    public function checkLoggedin()
+    {
+        $this->getContent();
+        $this->dom->load($this->content);
+        $csrf_token = $this->dom->find('meta[name="csrf-token"]');
+        if (count($csrf_token) > 0) {
+            $this->csrf_token = $csrf_token[0]->getAttribute('content');
+        }
+
+        return count($this->dom->find('.userInfo__email')) > 0;
     }
 }
