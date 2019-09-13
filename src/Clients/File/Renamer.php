@@ -48,6 +48,7 @@ class Renamer
     public function run()
     {
         $extension = $this->options['extension']->getValue();
+        $this->prepare();
         if (empty($extension)) {
             $extension = $this->selectExtension(Environment::getExtenions());
         }
@@ -57,6 +58,8 @@ class Renamer
         );
 
         natsort($files);
+        $renamedFiles = [];
+        $tmpDir = sprintf('%s/tmp', $this->outputDir);
 
         foreach ($files as $file) {
             $fileInfo = pathinfo($file);
@@ -79,15 +82,18 @@ class Renamer
                 $fileName = $this->slugify->slugify($fileName);
             }
 
-            $newFileName = sprintf('%s/%s/%s.%s', $this->outputDir, $fileInfo['dirname'], $fileName, $format);
-
+            $newFileName = sprintf('%s/%s.%s', $tmpDir, $fileName, $format);
             if ($newFileName !== $file) {
                 rename($file, $newFileName);
+                $renamedFiles[] = $newFileName;
+                $dirWriteLog = $fileInfo['dirname'] === '.' ? '' : $this->outputDir . '/';
                 Logger::log(
-                    sprintf('Rename file "%s" to "%s"', $file, str_replace(getcwd(), '', $newFileName))
+                    sprintf('Rename file "%s" to "%s%s"', $file, $dirWriteLog, basename($newFileName))
                 );
             }
         }
+        $this->move($renamedFiles);
+        $this->clean();
     }
 
     public function selectExtension($extensions)
@@ -101,5 +107,36 @@ class Renamer
             }
         }
         return $extension;
+    }
+
+    public function prepare()
+    {
+        if (!file_exists($this->outputDir)) {
+            mkdir($this->outputDir);
+        }
+        if (is_file($this->outputDir)) {
+            exit(sprintf('%s is file', $this->outputDir));
+        }
+
+        $tmpDir = sprintf('%s/tmp', $this->outputDir);
+        if (!file_exists($tmpDir)) {
+            mkdir($tmpDir);
+        }
+    }
+
+    public function move($renamedFiles)
+    {
+        foreach ($renamedFiles as $file) {
+            rename($file, sprintf('%s/%s', $this->outputDir, basename($file)));
+        }
+    }
+
+    public function clean()
+    {
+        $tmpDir = sprintf('%s/tmp', $this->outputDir);
+        foreach (glob(sprintf('%s/{*,.*}', $tmpDir)) as $file) {
+            unlink($file);
+        }
+        rmdir($tmpDir);
     }
 }
