@@ -135,6 +135,12 @@ class Renamer
     {
         $tmpDir = sprintf('%s/tmp', $this->outputDir);
         foreach (glob(sprintf('%s/{*,.*}', $tmpDir), GLOB_BRACE) as $file) {
+            if (in_array($file, array(
+                sprintf('%s/.', $tmpDir),
+                sprintf('%s/..', $tmpDir),
+            ))) {
+                continue;
+            }
             unlink($file);
         }
         rmdir($tmpDir);
