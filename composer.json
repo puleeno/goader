@@ -3,7 +3,7 @@
     "description": "Command line interface downloader written in PHP support multi hosts",
     "type": "project",
     "license": "MIT",
-    "version": "0.3.11",
+    "version": "0.3.12",
     "authors": [
         {
             "name": "Puleeno Nguyen",
