@@ -134,7 +134,7 @@ class Renamer
     public function clean()
     {
         $tmpDir = sprintf('%s/tmp', $this->outputDir);
-        foreach (glob(sprintf('%s/{*,.*}', $tmpDir)) as $file) {
+        foreach (glob(sprintf('%s/{*,.*}', $tmpDir), GLOB_BRACE) as $file) {
             unlink($file);
         }
         rmdir($tmpDir);
