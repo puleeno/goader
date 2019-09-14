@@ -100,6 +100,13 @@ final class Environment
         );
     }
 
+    public static function getNodeBinary() {
+        if (empty($node = getenv('GOADER_NODE_BINARY'))) {
+            return 'node';
+        }
+        return $node;
+    }
+
     public static function getExtenions()
     {
         $extensions = [];

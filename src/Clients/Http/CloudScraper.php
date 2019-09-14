@@ -14,16 +14,8 @@ class CloudScraper implements ClientInterface
     public function __construct($options = [])
     {
         $this->binFile = $this->getBinary();
-        $this->nodeBinary = $this->getNodeBinary();
+        $this->nodeBinary = Environment::getNodeBinary();
         $this->options = $options;
-    }
-
-    public function getNodeBinary()
-    {
-        if (empty($node = getenv('GOADER_NODE_BINARY'))) {
-            return 'node';
-        }
-        return $node;
     }
 
     private function getBinary()
