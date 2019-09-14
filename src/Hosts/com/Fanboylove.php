@@ -15,9 +15,6 @@ class Fanboylove extends Host
 
     protected $dom;
 
-    public $mangaID;
-    public $chapterID;
-
     protected $useCloudScraper = true;
     protected $useCookieJar = true;
     protected $supportLogin = true;
@@ -75,23 +72,23 @@ class Fanboylove extends Host
         $this->dom->load($this->content);
 
         $chapterArr = explode('/', trim($this->host['path'], '/'));
-        $chapter_name = end($chapterArr);
+        $chapterName = end($chapterArr);
 
-        if ($chapter_name) {
+        if ($chapterName) {
             $slugify = new Slugify();
-            $this->data['file_name_prefix'] = $slugify->slugify($chapter_name);
+            $this->data['file_name_prefix'] = $slugify->slugify($chapterName);
         }
 
         $images = $this->dom->find('.reading-content img');
-        $total_images = count($images);
+        $totalImages = count($images);
         if ($this->dirPrefix) {
-            Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
+            Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $totalImages));
         } else {
-            Logger::log(sprintf('This chapter has %s images', $total_images));
+            Logger::log(sprintf('This chapter has %s images', $totalImages));
         }
 
 
-        if ($total_images > 0) {
+        if ($totalImages > 0) {
             $headers = [
                 'Referer'   => $this->url,
                 'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A356 Safari/604.1',
@@ -103,12 +100,12 @@ class Fanboylove extends Host
             foreach ($images as $index => $image) {
                 try {
                     Logger::log(sprintf('The image %s is downloading...', $index + 1));
-                    $image_url = $this->formatLink($image->getAttribute('data-src'));
-                    if (empty($image_url)) {
+                    $imageUrl = $this->formatLink($image->getAttribute('data-src'));
+                    if (empty($imageUrl)) {
                         continue;
                     }
-                    $fileName = $this->generateFileName($image_url);
-                    $downloader->getContent($image_url, $fileName);
+                    $fileName = $this->generateFileName($imageUrl);
+                    $downloader->getContent($imageUrl, $fileName);
                     Environment::setCurrentIndex(++$currentIndex);
                 } catch (\Exception $e) {
                     Logger::log($e->getMessage());
@@ -127,7 +124,7 @@ class Fanboylove extends Host
     {
         $link = $originalUrl;
 
-        $pre = Hook::apply_filters('truyendoc_filter_image_link', false, $link);
+        $pre = Hook::apply_filters('fanboylove_filter_image_link', false, $link);
         if ($pre) {
             return $pre;
         }
