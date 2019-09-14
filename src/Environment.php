@@ -92,6 +92,14 @@ final class Environment
         return $args;
     }
 
+    public static function pluginDirectory($path = '') {
+        return sprintf(
+            '%s/plugins/%s',
+            Environment::getGoaderDir(),
+            $path
+        );
+    }
+
     public static function getExtenions()
     {
         $extensions = [];
