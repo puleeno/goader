@@ -22,16 +22,16 @@ class CookieJar
     public function convertToCookieJar()
     {
         $cookies = $this->cleanComments($this->cookies);
-        $cookie_arr = explode("\n", $cookies);
-        $cookiejar = array();
-        foreach ($cookie_arr as $cookie_str) {
-            if (empty(trim($cookie_str))) {
+        $cookieArray = explode("\n", $cookies);
+        $cookieJar = array();
+        foreach ($cookieArray as $cookieStr) {
+            if (empty(trim($cookieStr))) {
                 continue;
             }
-            $cookie = $this->createCookieFromString($cookie_str);
-            $cookiejar = $this->combineCookieJar($cookiejar, $cookie);
+            $cookie = $this->createCookieFromString($cookieStr);
+            $cookieJar = $this->combineCookieJar($cookieJar, $cookie);
         }
-        $this->cookieObjects = $cookiejar;
+        $this->cookieObjects = $cookieJar;
         $json = json_encode($this->cookieObjects);
 
         return str_replace('\/', '/', $json);
@@ -39,13 +39,13 @@ class CookieJar
 
     public function createCookieFromString($str)
     {
-        $cookie_info = explode("\t", $str);
-        if (count($cookie_info)!= 7) {
+        $cookieInfo = explode("\t", $str);
+        if (count($cookieInfo)!= 7) {
             exit('The cookies.txt is invalid');
         }
 
-        $cookie_info[0] = ltrim($cookie_info[0], '.');
-        list($host, $httpOnly, $path, $secure, $expiredAt, $name, $value) = $cookie_info;
+        $cookieInfo[0] = ltrim($cookieInfo[0], '.');
+        list($host, $httpOnly, $path, $secure, $expiredAt, $name, $value) = $cookieInfo;
 
         return [
             'host' => $host,
@@ -58,9 +58,9 @@ class CookieJar
         ];
     }
 
-    public function combineCookieJar($cookiejar, $cookie)
+    public function combineCookieJar($cookieJar, $cookie)
     {
-        $cookie_object = [
+        $cookieObj = [
             'key' => $cookie['name'],
             'value' => $cookie['value'],
             'expires' => date('c', $cookie['expiredAt']),
@@ -72,11 +72,11 @@ class CookieJar
         ];
 
         $time = strtotime("-3 months", time());
-        $cookie_object['creation'] = date('c', $time);
+        $cookieObj['creation'] = date('c', $time);
         $time = strtotime("-1 week", time());
-        $cookie_object['lastAccessed'] = date('c', $time);
-        $cookiejar[$cookie['host']][$cookie['path']][$cookie['name']] = $cookie_object;
+        $cookieObj['lastAccessed'] = date('c', $time);
+        $cookieJar[$cookie['host']][$cookie['path']][$cookie['name']] = $cookieObj;
 
-        return $cookiejar;
+        return $cookieJar;
     }
 }
