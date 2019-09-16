@@ -38,14 +38,14 @@ class CloudScraper implements ClientInterface
             }
 
             if (is_string($key)) {
-                $command .= sprintf(' --%s=%s', $key, $val);
+                $command .= sprintf(' --%s="%s"', $key, $val);
             } else {
                 $command .= ' ' . $val;
             }
         }
         return sprintf(
             '%s "%s" request %s "%s"',
-            $this->getNodeBinary(),
+            Environment::getNodeBinary(),
             $this->getBinary(),
             ltrim($command),
             $uri
