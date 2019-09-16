@@ -90,42 +90,27 @@ class Ac extends Host
             $nonce = $matches[1];
             $nonce = preg_replace('/[^\w]/', '', $nonce);
         }
-
-        $h = fopen('code.html', 'w');
-        fwrite($h, $content);
-        fclose($h);
-
-
         if (empty($data) || empty($nonce)) {
             exit('Invalid data on ac.qq.com. Please contact creator for update the host.');
         }
 
-        $str = $data;
-        $N = $nonce;
-        preg_match_all('/./', $str, $maches);
-        $T = $maches[0];
-        $len;
-        $locate;
-        $str = '';
-        if (preg_match_all('/\d+[a-zA-Z]+/', $N, $maches)) {
-            $N = $maches[0];
-        }
-        $len = count($N);
-        while ($len--) {
-            $locate = ((int)$N[$len]) & 255;
-            $str = preg_replace('/\d+/', '', $N[$len]);
-            array_splice($T, $locate, strlen($str));
-        }
-        $T = implode('', $T);
-
-        var_dump($json);
-        die;
+        exec(
+            sprintf(
+                '%s %s %s %s',
+                Environment::getNodeBinary(),
+                Environment::pluginDirectory('js/acqq.js'),
+                $data,
+                $nonce
+            ),
+            $decodedData
+        );
+        $chapterData = json_decode($decodedData);
 
         $images = [];
-        $this->dom->load($content);
-        $dom_images = $this->dom->find('#comicContain li img');
-        foreach ($dom_images as $dom_image) {
-            $images[] = $dom_image->getAttribute('src');
+        if ($chapterData) {
+            foreach ($dom_images as $dom_image) {
+                $images[] = $dom_image->getAttribute('src');
+            }
         }
         return $images;
     }
@@ -177,74 +162,5 @@ class Ac extends Host
             return $pre;
         }
         return $link;
-    }
-
-    function _utf8_decode($c)
-    {
-        $a = "";
-        $d = $c1 = $c2 = 0;
-        for ($b = 0; $b < strlen($c);) {
-            die($c);
-            $d = ord($c{$b});
-            if (128 > $d) {
-                $a += chr($d);
-                $b++;
-            } else {
-                if (191 < $d && 224 > $d) {
-                    $c2 = $c{$b + 1};
-                    $a += chr(($d & 31) << 6 | $c2 & 63);
-                    $b += 2;
-                } else {
-                    $c2 = ord($c{$b + 1});
-                    $c3 = ord($c{$b + 2});
-                    $a += chr(($d & 15) << 12 | ($c2 & 63) << 6 | $c3 & 63);
-                    $b += 3;
-                };
-            }
-        }
-        return $a;
-    }
-
-    function _decode($c)
-    {
-        $_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-        $a = "";
-        $b;
-        $d;
-        $h;
-        $f;
-        $g;
-        $e = 0;
-
-        // console.log(c.replace(/[^A-Za-z0-9\+\/\=]/g));
-
-        $c = preg_replace('/[^A-Za-z0-9\+\/\=]/', '', $c);
-
-        for ($c; $e < strlen($c);) {
-            $char1 = $c{$e++};
-            $b = strpos($_keyStr, $char1);
-
-            $char2 = $c{$e++};
-            $d = strpos($_keyStr, $char2);
-
-            $char3 = $c{$e++};
-            $f = strpos($_keyStr, $char3);
-
-            $char4 = $c{$e++};
-            $g = strpos($_keyStr, $char4);
-
-            $b = $b << 2 | $d >> 4;
-            $d = ($d & 15) << 4 | $f >> 2;
-            $h = ($f & 3) << 6 | $g;
-
-            $a .= chr($b);
-            if (64 != $f) {
-                $a .= chr($d);
-            }
-            if (64 != $g) {
-                $a .= chr($h);
-            }
-        }
-        return $a = $this->_utf8_decode($a);
     }
 }
