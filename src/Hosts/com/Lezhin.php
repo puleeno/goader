@@ -15,11 +15,11 @@ class Lezhin extends Host
     const NAME = 'lezhin';
     const LOGIN_END_POINT = 'en/login/submit';
     const CHAPTER_URL_FORMAT = '%s://www.%s/api/v2/inventory_groups/comic_viewer' .
-        '?platform=web&store=web&alias=loveshuttle&name=5&preload=true&type=comic_episode';
+        '?platform=web&store=web&alias=%s&name=%d&preload=true&type=comic_episode';
 
-    protected $supportLogin = true;
+    protected $supportLogin = false;
     protected $isLoggedIn = false;
-    protected $requiredLoggin = true;
+    protected $requiredLoggin = false;
     protected $dom;
     protected $csrf_token;
 
@@ -28,13 +28,6 @@ class Lezhin extends Host
 
     protected function checkPageType()
     {
-        /**
-         * Manga URL: http://www.u17.com/comic/144098.html
-         * Chapter URI: http://www.u17.com/chapter/580167.html
-         *
-         * 1: Manga
-         * 2: Chapter
-         */
         $pat = '/comic\/([^\/]*)(\/\d{1,})$/';
         if (preg_match($pat, $this->url, $matches)) {
             $this->mangaID = $matches[1];
@@ -111,6 +104,7 @@ class Lezhin extends Host
 
     public function downloadChapter()
     {
+        var_dump($this);die;
         $chapterHTML = (string)$this->getContent();
 
         $chapterUrl = sprintf(self::CHAPTER_URL_FORMAT, $this->host['scheme'], $this->host['host'], $this->chapterID);
@@ -178,10 +172,12 @@ class Lezhin extends Host
             'password' => Encryption::decrypt($account['password']),
             'remember_me' => 'on',
         ];
+        var_dump($postdata);die;
         $options = array_merge($this->defaultHttpClientOptions(), array(
             'form_params' => $postdata,
         ));
         $response = $this->http_client->post($login_url, $options);
+        var_dump($response);die;
         $this->getContent();
     }
 
@@ -189,9 +185,9 @@ class Lezhin extends Host
     {
         $this->getContent();
         $this->dom->load($this->content);
-        $csrf_token = $this->dom->find('meta[name="csrf-token"]');
+        $csrf_token = $this->dom->find('input[name="authenticity_token"]');
         if (count($csrf_token) > 0) {
-            $this->csrf_token = $csrf_token[0]->getAttribute('content');
+            $this->csrf_token = $csrf_token[0]->getAttribute('value');
         }
 
         return count($this->dom->find('.userInfo__email')) > 0;
