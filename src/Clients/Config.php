@@ -123,14 +123,12 @@ class Config
             $cookieJar = $cookiesContent;
         }
 
-        if (empty($cookieJar)) {
-            Logger::error('Please check the cookies content files');
-            exit;
+        if (!empty($cookieJar)) {
+            $cookieJarFile = sprintf('%s/hosts/%s.json', Environment::getUserGoaderDir(), 'lezhin.com');
+            $h = fopen($cookieJarFile, 'w');
+            fwrite($h, $cookieJar);
+            fclose($h);
         }
-        $cookieJarFile = sprintf('%s/hosts/%s.json', Environment::getUserGoaderDir(), 'lezhin.com');
-        $h = fopen($cookieJarFile, 'w');
-        fwrite($h, $cookieJar);
-        fclose($h);
     }
 
     public function core()
