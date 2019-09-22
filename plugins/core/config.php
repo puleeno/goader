@@ -53,6 +53,10 @@ Hook::add_action('goader_init', function () {
                             'required' => false,
                             'description' => 'Load cookiejar to host config',
                         ),
+                        'token' => array(
+                            'required' => false,
+                            'description' => 'Use token to download',
+                        ),
                     ),
                     'core' => array(
                     ),

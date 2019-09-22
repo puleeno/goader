@@ -129,6 +129,18 @@ class Config
             fwrite($h, $cookieJar);
             fclose($h);
         }
+
+        if (($token = $this->options['token']->getValue())) {
+            $tokensFile = sprintf('%s/tokens.dat', Environment::getUserGoaderDir());
+            $tokens = array();
+            if (file_exists($tokensFile)) {
+                $tokens = unserialize(file_get_contents($tokensFile));
+            }
+            $tokens[$name] = $token;
+            $h = fopen($tokensFile, 'w');
+            fwrite($h, serialize($tokens));
+            fclose($h);
+        }
     }
 
     public function core()
