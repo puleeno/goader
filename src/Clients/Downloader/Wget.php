@@ -58,7 +58,7 @@ class Wget
                     break;
             }
         }
-        return sprintf('%s %s %s', 'wget', trim($command), $url);
+        return sprintf('%s %s "%s"', 'wget', trim($command), $url);
     }
 
     public function excuteCommand($command)
