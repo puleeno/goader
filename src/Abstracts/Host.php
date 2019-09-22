@@ -5,6 +5,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use PHPHtmlParser\Dom;
 use Puleeno\Goader\Clients\Http\Cloudscraper;
+use Puleeno\Goader\Clients\Downloader\Wget;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
@@ -73,7 +74,7 @@ abstract class Host implements HostInterface
             $this->http_client = $client;
         }
         if (!empty($this->useCloudScraper)) {
-            $this->http_client = new Cloudscraper(this->defaultHttpClientOptions());
+            $this->http_client = new Cloudscraper($this->defaultHttpClientOptions());
         } else {
             $this->http_client = new Client($this->defaultHttpClientOptions());
         }
@@ -124,15 +125,11 @@ abstract class Host implements HostInterface
             $url = $this->url;
         }
         $options = array_merge($this->defaultHttpClientOptions(), $options);
+        if ($client) {
+            $this->createHttpClient($client);
+        }
         try {
-            if ($client) {
-                $this->createHttpClient($client);
-            }
-            $res = $this->http_client->request(
-                $method,
-                $url,
-                $options
-            );
+            $res = $this->http_client->request($method, $url, $options);
             $this->content = (string)$res->getBody();
         } catch (\Exception $e) {
             Logger::log(sprintf('Error when download #%d with URL %s', Environment::getCurrentIndex(), $url));
@@ -259,7 +256,7 @@ abstract class Host implements HostInterface
 
     public function downloadImages($images)
     {
-        $httpClient = new Client($this->defaultHttpClientOptions());
+        $downloader = new Wget();
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
@@ -277,8 +274,7 @@ abstract class Host implements HostInterface
                 }
 
                 $fileName = $this->generateFileName($image_url, false);
-                $this->getContent($image_url, $httpClient);
-                $this->saveFile($fileName);
+                $downloader->getContent($image_url, $fileName);
             } catch (\Exception $e) {
                 Logger::log($e->getMessage());
             }
