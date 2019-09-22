@@ -92,7 +92,8 @@ final class Environment
         return $args;
     }
 
-    public static function pluginDirectory($path = '') {
+    public static function pluginDirectory($path = '')
+    {
         return sprintf(
             '%s/plugins/%s',
             Environment::getGoaderDir(),
@@ -100,7 +101,8 @@ final class Environment
         );
     }
 
-    public static function getNodeBinary() {
+    public static function getNodeBinary()
+    {
         if (empty($node = getenv('GOADER_NODE_BINARY'))) {
             return 'node';
         }
