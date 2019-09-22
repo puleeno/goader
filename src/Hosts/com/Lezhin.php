@@ -14,25 +14,28 @@ class Lezhin extends Host
 {
     const NAME = 'lezhin';
     const LOGIN_END_POINT = 'en/login/submit';
-    const CHAPTER_URL_FORMAT = '%s://www.%s/api/v2/inventory_groups/comic_viewer' .
-        '?platform=web&store=web&alias=%s&name=%d&preload=true&type=comic_episode';
+    const CHAPTER_URL_FORMAT = '%1$s/api/v2/inventory_groups/comic_viewer' .
+        '?platform=web&store=web&alias=%2$s&name=%3$d&preload=true&type=comic_episode';
+    const CDN_IMAGE_FORMAT = '%1$s://cdn.%2$s/v2%3$s?access_token=%4$s&purchased=true&q=30&updated=%d';
 
     protected $supportLogin = false;
     protected $isLoggedIn = false;
     protected $requiredLoggin = false;
     protected $dom;
     protected $csrf_token;
+    protected $useCloudScraper = false;
+    protected $userToken;
 
-    public $mangaID;
-    public $chapterID;
+    public $comicId;
+    public $chapterId;
 
     protected function checkPageType()
     {
         $pat = '/comic\/([^\/]*)(\/\d{1,})$/';
         if (preg_match($pat, $this->url, $matches)) {
-            $this->mangaID = $matches[1];
+            $this->comicId = $matches[1];
             if (isset($matches[2])) {
-                $this->chapterID = ltrim($matches[2], '/');
+                $this->chapterId = ltrim($matches[2], '/');
                 return 2;
             }
             return 1;
@@ -104,56 +107,53 @@ class Lezhin extends Host
 
     public function downloadChapter()
     {
-        var_dump($this);die;
-        $chapterHTML = (string)$this->getContent();
-
-        $chapterUrl = sprintf(self::CHAPTER_URL_FORMAT, $this->host['scheme'], $this->host['host'], $this->chapterID);
-        $this->content = (string)$this->getContent($chapterUrl);
-        $images = $this->getImagesFromJsonStr($this->content);
-
-        $total_images = count($images);
-        if ($this->dirPrefix) {
-            Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
-        } else {
-            Logger::log(sprintf('This chapter has %s images', $total_images));
+        $host = $this->host;
+        unset($host['path']);
+        $host = implode('://', $host);
+        $this->url = sprintf(self::CHAPTER_URL_FORMAT, $host, $this->comicId, $this->chapterId);
+        $response = (string)$this->getContent();
+        if (!$response) {
+            exit(sprintf('Can not get information fron %s', $this->host['host']));
         }
-
-
-        if ($total_images > 0) {
-            $httpClient = new Client();
-            foreach ($images as $index => $image) {
-                Environment::setCurrentIndex($index + 1);
-                try {
-                    Logger::log(sprintf('The image %s with URL %s is downloading...', $index + 1, $image));
-                    $image_url = $this->formatLink($image);
-                    if (!$this->validateLink($image_url)) {
-                        Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
-                        continue;
-                    }
-
-                    $fileName = $this->generateFileName($image_url, false);
-
-                    $this->getContent($image_url, $httpClient)->saveFile($fileName);
-                } catch (\Exception $e) {
-                    Logger::log($e->getMessage());
-                }
-            }
-            if ($this->dirPrefix) {
-                Logger::log(sprintf('The %s is downloaded successfully!!', strtolower($this->dirPrefix)));
-            } else {
-                Logger::log(sprintf('The chapter is downloaded successfully!!'));
-            }
-            unset($images);
+        $chapterInfo = json_decode($response, true);
+        if (!$chapterInfo) {
+            exit(sprintf('Invalid response from %s', $this->host['host']));
         }
+        if (empty($chapterInfo['data']['extra']['episode']['scrollsInfo'])) {
+            exit(sprintf('Can not get images list from %s', $this->host['host']));
+        }
+        $images = $chapterInfo['data']['extra']['episode']['scrollsInfo'];
+        $extracedImages = [];
+        foreach ($images as $image) {
+            $extracedImages[] = $image['path'];
+        }
+        if (!$this->isLoggedIn) {
+            $token = Config::get($this->getHostName(), 'tokens');
+            if (empty($token)) {
+                exit(sprintf('Please login or use token to download at %s', $this->host['host']));
+            }
+        }
+        $this->userToken = $token;
+        $this->downloadImages($extracedImages);
     }
 
     public function formatLink($originalUrl)
     {
         $link = $originalUrl;
-        $pre = Hook::apply_filters('u17_filter_image_link', false, $link);
+        $pre = Hook::apply_filters('lezhin_filter_image_link', false, $link);
         if ($pre) {
             return $pre;
         }
+        https://cdn.lezhin.com/v2/comics/5862821801623552/episodes/4542142846205952/contents/scrolls/1?access_token=bab22130-39f9-4363-9113-71f6ba63f945&q=30&updated=1566266756710
+        $time = time();
+        $link = sprintf(
+            self::CDN_IMAGE_FORMAT,
+            $this->host['scheme'],
+            ltrim($this->host['host'], 'www.'),
+            $originalUrl,
+            $this->userToken,
+            $time
+        );
         return $link;
     }
 
@@ -172,12 +172,10 @@ class Lezhin extends Host
             'password' => Encryption::decrypt($account['password']),
             'remember_me' => 'on',
         ];
-        var_dump($postdata);die;
         $options = array_merge($this->defaultHttpClientOptions(), array(
             'form_params' => $postdata,
         ));
         $response = $this->http_client->post($login_url, $options);
-        var_dump($response);die;
         $this->getContent();
     }
 
