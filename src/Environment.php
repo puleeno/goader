@@ -15,6 +15,7 @@ final class Environment
     public $currentIndex;
     public $fileName;
     public $directoryName;
+    public $goaderDirName;
 
     public function __construct()
     {
@@ -23,8 +24,10 @@ final class Environment
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $this->userHomeDir = sprintf('%s%s', getenv('HOMEDRIVE'), getenv('HOMEPATH'));
+            $this->goaderDirName = 'Goader';
         } else {
             $this->userHomeDir = getenv('HOME');
+            $this->goaderDirName = '.goader';
         }
 
         $this->workDir = getcwd();
@@ -68,8 +71,9 @@ final class Environment
     public static function getUserGoaderDir()
     {
         return sprintf(
-            '%s/.goader',
-            self::getUserHomeDir()
+            '%s/%s',
+            self::getUserHomeDir(),
+            self::getGoaderDirName(),
         );
     }
 

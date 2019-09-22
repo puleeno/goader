@@ -30,6 +30,10 @@ class Config
         if (empty($commands)) {
             exit('Please input your configs');
         }
+        $configDir = Environment::getUserGoaderDir();
+        if (!file_exists($configDir)) {
+            mkdir($configDir, 0755, true);
+        }
         $this->commands = $commands;
         $this->options = Command::getCommand()->getOptions();
         if (!$this->configIsLoaded) {
