@@ -16,16 +16,15 @@ class Lezhin extends Host
     const LOGIN_END_POINT = 'en/login/submit';
     const CHAPTER_URL_FORMAT = '%1$s/api/v2/inventory_groups/comic_viewer' .
         '?platform=web&store=web&alias=%2$s&name=%3$d&preload=true&type=comic_episode';
-    const CDN_IMAGE_FORMAT = '%1$s://cdn.%2$s/v2%3$s?access_token=%4$s&purchased=true&q=30&updated=%d';
+    const CDN_IMAGE_FORMAT = '%1$s://cdn.%2$s/v2%3$s?access_token=%4$s&q=30&updated=%5$d';
 
     protected $supportLogin = false;
     protected $isLoggedIn = false;
     protected $requiredLoggin = false;
+    protected $useCloudScraper = true;
     protected $dom;
     protected $csrf_token;
-    protected $useCloudScraper = false;
     protected $userToken;
-
     public $comicId;
     public $chapterId;
 
@@ -144,7 +143,6 @@ class Lezhin extends Host
         if ($pre) {
             return $pre;
         }
-        https://cdn.lezhin.com/v2/comics/5862821801623552/episodes/4542142846205952/contents/scrolls/1?access_token=bab22130-39f9-4363-9113-71f6ba63f945&q=30&updated=1566266756710
         $time = time();
         $link = sprintf(
             self::CDN_IMAGE_FORMAT,
@@ -187,7 +185,6 @@ class Lezhin extends Host
         if (count($csrf_token) > 0) {
             $this->csrf_token = $csrf_token[0]->getAttribute('value');
         }
-
         return count($this->dom->find('.userInfo__email')) > 0;
     }
 }
