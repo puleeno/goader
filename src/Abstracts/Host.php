@@ -39,12 +39,8 @@ abstract class Host implements HostInterface
         } else {
             $this->host = $host;
         }
-        if (!empty($this->useCloudScraper)) {
-            $this->http_client = new Cloudscraper();
-        } else {
-            $this->http_client = new Client();
-        }
         $this->dom = new Dom();
+        $this->createHttpClient();
 
         if ($this->supportLogin) {
             $this->useCookieJar = true;
@@ -70,6 +66,17 @@ abstract class Host implements HostInterface
     public function getName()
     {
         return $this::NAME;
+    }
+
+    public function createHttpClient($client = null) {
+        if ($client) {
+            $this->http_client = $client;
+        }
+        if (!empty($this->useCloudScraper)) {
+            $this->http_client = new Cloudscraper(this->defaultHttpClientOptions());
+        } else {
+            $this->http_client = new Client($this->defaultHttpClientOptions());
+        }
     }
 
     public function getHostName()
@@ -118,11 +125,10 @@ abstract class Host implements HostInterface
         }
         $options = array_merge($this->defaultHttpClientOptions(), $options);
         try {
-            $res = $client ? $client->request(
-                $method,
-                $url,
-                $options
-            ) : $this->http_client->request(
+            if ($client) {
+                $this->createHttpClient($client);
+            }
+            $res = $this->http_client->request(
                 $method,
                 $url,
                 $options
@@ -130,7 +136,8 @@ abstract class Host implements HostInterface
             $this->content = (string)$res->getBody();
         } catch (\Exception $e) {
             Logger::log(sprintf('Error when download #%d with URL %s', Environment::getCurrentIndex(), $url));
-            // $e->getMessage();
+            Logger::log($e->getMessage());
+            $this->content = '';
         }
         return $this;
     }
@@ -227,6 +234,7 @@ abstract class Host implements HostInterface
     public function defaultHttpClientOptions()
     {
         $options = [
+            'verify' => false,
             'User-Agent'=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
         ];
         $jar = $this->useCloudScraper ? $this->getCookieJar() : new FileCookieJar($this->getCookieJar(), true);
@@ -251,7 +259,7 @@ abstract class Host implements HostInterface
 
     public function downloadImages($images)
     {
-        $httpClient = new Client();
+        $httpClient = new Client($this->defaultHttpClientOptions());
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
@@ -261,15 +269,16 @@ abstract class Host implements HostInterface
         foreach ($images as $index => $image) {
             Environment::setCurrentIndex($index + 1);
             try {
-                Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image));
                 $image_url = $this->formatLink($image);
+                Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image_url));
                 if (!$this->validateLink($image_url)) {
                     Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
                     continue;
                 }
 
                 $fileName = $this->generateFileName($image_url, false);
-                $this->getContent($image_url, $httpClient)->saveFile($fileName);
+                $this->getContent($image_url, $httpClient);
+                $this->saveFile($fileName);
             } catch (\Exception $e) {
                 Logger::log($e->getMessage());
             }
