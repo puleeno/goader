@@ -234,8 +234,9 @@ abstract class Host implements HostInterface
             'verify' => false,
             'User-Agent'=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
         ];
-        $jar = $this->useCloudScraper ? $this->getCookieJar() : new FileCookieJar($this->getCookieJar(), true);
+
         if ($this->useCookieJar) {
+            $jar = $this->useCloudScraper ? $this->getCookieJar() : new FileCookieJar($this->getCookieJar(), true);
             $options['cookies'] = $jar;
         }
         return $options;
