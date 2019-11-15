@@ -1,12 +1,12 @@
 <?php
 namespace Puleeno\Goader\Hosts\io;
 
-use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 use Puleeno\Goader\Logger;
+use Puleeno\Goader\Clients\Downloader\Wget;
 
 class Text extends Host
 {
@@ -33,7 +33,7 @@ class Text extends Host
             $totalImages = count($images);
             Logger::log(sprintf('Your file has contains %d URLs', $totalImages));
 
-            $httpClient = new Client();
+            $downloader = new Wget();
             foreach ($images as $index => $image) {
                 $image = $this->formatLink(trim($image));
                 if (!$this->validateLink($image)) {
@@ -45,7 +45,7 @@ class Text extends Host
 
                 Logger::log(sprintf('Download image has URL %s', $image));
                 $fileName = $this->generateFileName($image, false);
-                $this->getContent($image, $httpClient)->saveFile($fileName);
+                $downloader->getContent($image, $fileName);
             }
 
             Logger::log('All your URL has downloaded sucessfully!!');
