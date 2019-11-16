@@ -2,6 +2,7 @@
 namespace Puleeno\Goader;
 
 use Puleeno\Goader\Hosts\com\Duzhez;
+use Puleeno\Goader\Clients\Downloader\Wget;
 
 final class Environment
 {
@@ -128,5 +129,10 @@ final class Environment
         }
 
         return $extensions;
+    }
+
+    public static function getDownloader()
+    {
+        return Wget::class;
     }
 }
