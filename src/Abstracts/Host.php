@@ -69,7 +69,8 @@ abstract class Host implements HostInterface
         return $this::NAME;
     }
 
-    public function createHttpClient($client = null) {
+    public function createHttpClient($client = null)
+    {
         if ($client) {
             $this->http_client = $client;
             return;
@@ -256,9 +257,14 @@ abstract class Host implements HostInterface
         return preg_match('/^https?:\/\//', $link) && is_int(strpos($link, '.'));
     }
 
+    protected function downloadClientOptions()
+    {
+        return [];
+    }
+
     public function downloadImages($images)
     {
-        $downloader = new Wget();
+        $downloader = new Wget($this->downloadClientOptions());
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
