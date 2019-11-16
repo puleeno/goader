@@ -105,7 +105,7 @@ class Iqiyi extends Host
     public function formatLink($originalUrl)
     {
         $link = $originalUrl;
-        $pre = Hook::apply_filters('u17_filter_image_link', false, $link);
+        $pre = Hook::apply_filters('iqiyi_filter_image_link', false, $link);
         if ($pre) {
             return $pre;
         }
