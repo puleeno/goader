@@ -1,7 +1,6 @@
 <?php
 namespace Puleeno\Goader\Hosts\com;
 
-use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;

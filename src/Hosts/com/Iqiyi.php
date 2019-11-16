@@ -1,7 +1,6 @@
 <?php
 namespace Puleeno\Goader\Hosts\com;
 
-use GuzzleHttp\Client;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
@@ -94,38 +93,13 @@ class Iqiyi extends Host
     {
         $this->content = (string)$this->getContent();
         $images = $this->getImagesFromHTML($this->content);
-        $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
         } else {
             Logger::log(sprintf('This chapter has %s images', $total_images));
         }
 
-        if ($total_images > 0) {
-            $httpClient = new Client();
-            foreach ($images as $index => $image) {
-                Environment::setCurrentIndex($index + 1);
-                try {
-                    Logger::log(sprintf('Downloading image #%d has URL %s.', $index + 1, $image));
-                    $image_url = $this->formatLink($image);
-                    if (!$this->validateLink($image_url)) {
-                        Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image_url));
-                        continue;
-                    }
-
-                    $fileName = $this->generateFileName($image_url, false);
-                    $this->getContent($image_url, $httpClient)->saveFile($fileName);
-                } catch (\Exception $e) {
-                    Logger::log($e->getMessage());
-                }
-            }
-            if ($this->dirPrefix) {
-                Logger::log(sprintf('The %s is downloaded successfully!!', strtolower($this->dirPrefix)));
-            } else {
-                Logger::log(sprintf('The chapter is downloaded successfully!!'));
-            }
-            unset($images);
-        }
+        $this->downloadImages($images);
     }
 
     public function formatLink($originalUrl)
