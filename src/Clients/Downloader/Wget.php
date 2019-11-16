@@ -21,7 +21,9 @@ class Wget
     public function getContent($url, $fileName)
     {
         $command = $this->buildCommand($url, array_merge($this->options, [
-            'O' => $fileName
+            'O' => $fileName,
+            'quiet',
+            'show-progress',
         ]));
         $this->excuteCommand($command);
     }
@@ -34,6 +36,11 @@ class Wget
             if ($key==='headers') {
                 $key = 'header';
             }
+            if (gettype($key) === 'integer') {
+                $command .= sprintf('--%s ', $val);
+                continue;
+            }
+
             switch (gettype($val)) {
                 case 'array':
                     foreach ($val as $name => $v) {
