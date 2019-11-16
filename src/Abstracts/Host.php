@@ -72,6 +72,7 @@ abstract class Host implements HostInterface
     public function createHttpClient($client = null) {
         if ($client) {
             $this->http_client = $client;
+            return;
         }
         if (!empty($this->useCloudScraper)) {
             $this->http_client = new Cloudscraper($this->defaultHttpClientOptions());
