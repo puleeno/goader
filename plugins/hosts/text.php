@@ -14,9 +14,11 @@ Hook::add_action('goader_init', function () {
             return $host;
         }
 
-        $ext = pathinfo($textFile, PATHINFO_EXTENSION);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $textFile);
+        finfo_close($finfo);
 
-        if ($ext === 'txt') {
+        if ($mime_type === 'text/plain') {
             register_text_command_options();
             return Text::class;
         }

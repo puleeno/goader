@@ -29,26 +29,6 @@ class Text extends Host
     public function download($directoryName = null)
     {
         $images = explode("\n", file_get_contents($this->host['path']));
-        if (!empty($images)) {
-            $totalImages = count($images);
-            Logger::log(sprintf('Your file has contains %d URLs', $totalImages));
-
-            $downloader = new Wget();
-            foreach ($images as $index => $image) {
-                $image = $this->formatLink(trim($image));
-                if (!$this->validateLink($image)) {
-                    Logger::log(sprintf('The url #%d is invalid with value "%s"', $index + 1, $image));
-                    continue;
-                }
-
-                Environment::setCurrentIndex($index + 1);
-
-                Logger::log(sprintf('Download image has URL %s', $image));
-                $fileName = $this->generateFileName($image, false);
-                $downloader->getContent($image, $fileName);
-            }
-
-            Logger::log('All your URL has downloaded sucessfully!!');
-        }
+        $this->downloadImages($images);
     }
 }
