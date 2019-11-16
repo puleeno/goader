@@ -33,6 +33,7 @@ require('yargs')
         uri: argv.url,
         method: argv.method,
         gzip: true,
+        followAllRedirects: true,
     };
     if (argv.formData) {
         options.formData = JSON.parse(argv.formData);
