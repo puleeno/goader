@@ -15,6 +15,9 @@ class Wget
             'header',
             'O',
             'load-cookies',
+            'quiet',
+            'show-progress',
+            'headers'
         ]);
     }
 
@@ -22,8 +25,8 @@ class Wget
     {
         $command = $this->buildCommand($url, array_merge($this->options, [
             'O' => $fileName,
-            'quiet',
-            'show-progress',
+            'quiet' => true,
+            'show-progress' => true,
         ]));
         $this->excuteCommand($command);
     }
@@ -33,12 +36,11 @@ class Wget
     {
         $command = '';
         foreach ($options as $key => $val) {
+            if (!in_array($key, $this->supported_options)) {
+                continue;
+            }
             if ($key==='headers') {
                 $key = 'header';
-            }
-            if (gettype($key) === 'integer') {
-                $command .= sprintf('--%s ', $val);
-                continue;
             }
 
             switch (gettype($val)) {
@@ -55,6 +57,9 @@ class Wget
                             $command .= sprintf('--%s="%s: %s" ', $key, $name, $v);
                         }
                     }
+                    break;
+                case 'boolean':
+                    $command .= sprintf('--%s ', $key);
                     break;
                 default:
                     if (strlen($key) === 1) {
