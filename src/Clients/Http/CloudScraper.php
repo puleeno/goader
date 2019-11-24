@@ -3,6 +3,7 @@ namespace Puleeno\Goader\Clients\Http;
 
 use Puleeno\Goader\Clients\Http\Response;
 use Puleeno\Goader\Environment;
+use Puleeno\Goader\Hook;
 use Puleeno\Goader\Interfaces\Http\ClientInterface;
 
 class CloudScraper implements ClientInterface
@@ -10,12 +11,22 @@ class CloudScraper implements ClientInterface
     protected $binFile;
     protected $nodeBinary;
     protected $options = [];
+    protected $supportedOptions = [];
 
     public function __construct($options = [])
     {
         $this->binFile = $this->getBinary();
         $this->nodeBinary = Environment::getNodeBinary();
         $this->options = $options;
+        $this->supportedOptions = Hook::apply_filters(
+            'goader_cloudscraper_client_supported_options',
+            array(
+                'user-agent',
+                'method',
+                'cookies',
+                'formdata',
+            )
+        );
     }
 
     private function getBinary()
@@ -30,15 +41,20 @@ class CloudScraper implements ClientInterface
     {
         $command = '';
         foreach ($commandArgs as $key => $val) {
+            $key = strtolower($key);
+            if (!in_array($key, $this->supportedOptions)) {
+                continue;
+            }
+
             switch (gettype($val)) {
                 case 'array':
                 case 'object':
-                    $val = '\'' . json_encode($val) . '\'';
+                    $val = json_encode($val);
                     break;
             }
 
             if (is_string($key)) {
-                $command .= sprintf(' --%s="%s"', $key, $val);
+                $command .= sprintf(' --%s=\'%s\'', $key, $val);
             } else {
                 $command .= ' ' . $val;
             }
@@ -64,7 +80,6 @@ class CloudScraper implements ClientInterface
         $this->options = array_merge($this->options, [
             'method' => $method,
         ]);
-
         $command = $this->buildCommand($uri, $this->options);
         $body    = $this->executeCommand($command);
 
