@@ -262,9 +262,12 @@ abstract class Host implements HostInterface
         return [];
     }
 
-    public function downloadImages($images)
+    public function downloadImages($images, $httpOptions = [])
     {
-        $downloader = new Wget($this->downloadClientOptions());
+        $downloader = new Wget(array_merge(
+            $this->downloadClientOptions(),
+            $httpOptions
+        ));
         $total_images = count($images);
         if ($this->dirPrefix) {
             Logger::log(sprintf('The %s has %s images', strtolower($this->dirPrefix), $total_images));
