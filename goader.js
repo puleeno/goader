@@ -13,7 +13,7 @@ require('yargs')
       default: 'GET',
       describe: 'The HTTP request method'
     });
-    yargs.positional('form-data', {
+    yargs.positional('formdata', {
         type: 'string',
         default: '',
         describe: 'The form data use to submit to the request'
@@ -35,8 +35,8 @@ require('yargs')
         gzip: true,
         followAllRedirects: true,
     };
-    if (argv.formData) {
-        options.formData = JSON.parse(argv.formData);
+    if (argv.formdata) {
+        options.formData = JSON.parse(argv.formdata);
     }
     if (argv.cookies) {
         options.jar = request.jar(new FileCookieStore(argv.cookies));
