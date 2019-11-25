@@ -2,7 +2,6 @@ const cloudscraper = require('cloudscraper');
 const FileCookieStore = require('tough-cookie-filestore');
 const request = require('request');
 const goader = require('./package.json');
-const fs = require('fs');
 
 require('yargs')
   .scriptName("goader")
@@ -18,11 +17,6 @@ require('yargs')
         default: '',
         describe: 'The form data use to submit to the request'
     });
-    yargs.positional('saveto', {
-      type: 'string',
-      default: '',
-      describe: 'The form data use to submit to the request'
-  });
     yargs.positional('headers', {
       type: 'string',
       default: '',
@@ -40,30 +34,16 @@ require('yargs')
         gzip: true,
         followAllRedirects: true,
     };
-    let fileStream = null;
     if (argv.formdata) {
         options.formData = JSON.parse(argv.formdata);
     }
     if (argv.cookies) {
         options.jar = request.jar(new FileCookieStore(argv.cookies));
     }
-    if (argv.saveto) {
-      fileStream = fs.createWriteStream(argv.saveto);
-    }
     if (argv.headers) {
       options.headers = JSON.parse(argv.headers);
     }
-    cloudscraper(options).then((response) => {
-      if (!fileStream) {
-        console.log(response);
-      } else {
-        fileStream.once('open', function(fd) {
-          fileStream.write(response);
-          fileStream.end();
-        });
-      }
-    }
-    ).catch(console.error);
+    cloudscraper(options).then(console.log).catch(console.error);
   })
   .help()
   .argv
