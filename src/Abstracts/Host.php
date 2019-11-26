@@ -218,18 +218,6 @@ abstract class Host implements HostInterface
         exit(sprintf('We do not support download for URL %s', $this->url));
     }
 
-    public function getCookieJarFile()
-    {
-        $cookieFileName = $this->getHostName();
-        $cookieFile = sprintf(
-            '%s/%s.cookie',
-            Environment::getCookiesDir(),
-            strtolower(str_replace('\\', '.', $cookieFileName))
-        );
-
-        return $cookieFile;
-    }
-
     public function defaultHttpClientOptions()
     {
         $options = [
