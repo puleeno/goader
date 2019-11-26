@@ -55,7 +55,7 @@ class CloudScraper implements ClientInterface
             }
 
             if (is_string($key)) {
-                $command .= sprintf(' --%s=\'%s\'', $key, $val);
+                $command .= sprintf(' --%s="%s"', $key, str_replace('"', '\\"', $val));
             } else {
                 $command .= ' ' . $val;
             }
@@ -77,6 +77,9 @@ class CloudScraper implements ClientInterface
 
     public function request($method, $uri = '', $options = [])
     {
+        $url = parse_url($uri);
+        $uri = sprintf('%s://%s/%s', $url['scheme'], $url['host'], urlencode($url['path']));
+
         $this->options = array_merge($this->options, $options);
         $this->options = array_merge($this->options, [
             'method' => $method,
