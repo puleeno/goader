@@ -78,7 +78,7 @@ class CloudScraper implements ClientInterface
     public function request($method, $uri = '', $options = [])
     {
         $url = parse_url($uri);
-        $uri = sprintf('%s://%s/%s', $url['scheme'], $url['host'], urlencode($url['path']));
+        $uri = sprintf('%s://%s/%s', $url['scheme'], $url['host'], urlencode(ltrim($url['path'], '/')));
 
         $this->options = array_merge($this->options, $options);
         $this->options = array_merge($this->options, [
