@@ -43,7 +43,7 @@ require('yargs')
     if (argv.headers) {
       options.headers = JSON.parse(argv.headers);
     }
-    cloudscraper(options).then(console.log).catch(console.error);
+    cloudscraper(options).then(console.log).catch(console.log);
   })
   .help()
   .argv
