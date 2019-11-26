@@ -4,7 +4,6 @@ namespace Puleeno\Goader\Hosts\com;
 use Cocur\Slugify\Slugify;
 use Puleeno\Goader\Abstracts\Host;
 use Puleeno\Goader\Clients\Config;
-use Puleeno\Goader\Clients\Downloader\Wget;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Encryption;
 use Puleeno\Goader\Environment;
