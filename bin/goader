@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 use Puleeno\Goader\Goader;
-define( 'GOADER_MAIN_BIN_FILE', dirname(__FILE__) . '/vendor/puleeno/goader/bin/goader');
 
 define('GOADER_MAIN_BIN_FILE', __FILE__);
 $composer = false;
