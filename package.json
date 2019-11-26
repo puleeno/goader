@@ -22,7 +22,7 @@
   "homepage": "https://github.com/puleeno/goader#readme",
   "dependencies": {
     "brotli": "^1.3.2",
-    "cloudscraper": "^4.3.0",
+    "cloudscraper": "4.3.0",
     "request": "^2.88.0",
     "tough-cookie-filestore": "0.0.1",
     "yargs": "^14.0.0"
