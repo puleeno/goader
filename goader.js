@@ -1,8 +1,6 @@
 const cloudscraper = require('cloudscraper');
 const FileCookieStore = require('tough-cookie-filestore');
 const request = require('request');
-const goader = require('./package.json');
-const Buffer = require('buffer');
 const fs = require('fs');
 
 require('yargs')
@@ -52,7 +50,7 @@ require('yargs')
     }
     cloudscraper(options).then((response) => {
       if (argv.saveto) {
-        const buff = Buffer.from(response, 'utf8');
+        const buff = Buffer.from(response);
         fs.writeFileSync(argv.saveto, buff);
       } else {
         console.log(response);
