@@ -32,7 +32,7 @@ abstract class Host implements HostInterface
 
     protected $data = array();
 
-    public function __construct($url, $host = null)
+    public function __construct($url = null, $host = null)
     {
         $this->url = $url;
         if (empty($host)) {
