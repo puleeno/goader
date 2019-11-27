@@ -144,6 +144,7 @@ class Fanboylove extends Host
                 'pass' => $password,
                 'rememberme' => 'forever',
             ),
+            'rawUri' => true,
         ));
         $json = json_decode($content);
         if (isset($json->success) && $json->success) {
@@ -153,3 +154,4 @@ class Fanboylove extends Host
         }
     }
 }
+
