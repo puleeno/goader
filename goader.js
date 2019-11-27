@@ -2,6 +2,8 @@ const cloudscraper = require('cloudscraper');
 const FileCookieStore = require('tough-cookie-filestore');
 const request = require('request');
 const goader = require('./package.json');
+const Buffer = require('buffer');
+const fs = require('fs');
 
 require('yargs')
   .scriptName("goader")
@@ -17,6 +19,11 @@ require('yargs')
         default: '',
         describe: 'The form data use to submit to the request'
     });
+    yargs.positional('saveto', {
+      type: 'string',
+      default: '',
+      describe: 'Write the response to file'
+  });
     yargs.positional('headers', {
       type: 'string',
       default: '',
@@ -43,7 +50,14 @@ require('yargs')
     if (argv.headers) {
       options.headers = JSON.parse(argv.headers);
     }
-    cloudscraper(options).then(console.log).catch(console.log);
+    cloudscraper(options).then((response) => {
+      if (argv.saveto) {
+        const buff = Buffer.from(response, 'utf8');
+        fs.writeFileSync(argv.saveto, buff);
+      } else {
+        console.log(response);
+      }
+    }).catch(console.log);
   })
   .help()
   .argv
