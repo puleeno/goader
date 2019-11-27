@@ -1,6 +1,7 @@
 <?php
 namespace Puleeno\Goader\Clients\Downloader;
 
+use Puleeno\Goader\Environment;
 use Puleeno\Goader\Hook;
 
 class Wget
@@ -17,7 +18,8 @@ class Wget
             'load-cookies',
             'quiet',
             'show-progress',
-            'headers'
+            'headers',
+            'host',
         ]);
     }
 
@@ -41,6 +43,29 @@ class Wget
             }
             if ($key==='headers') {
                 $key = 'header';
+            }
+
+            if ($key === 'host') {
+                $cookieJarFile = sprintf(
+                    '%s/hosts/%s.json',
+                    Environment::getUserGoaderDir(),
+                    Hook::apply_filters(
+                        'goader_extract_cookie_jar_file_name',
+                        $val
+                    )
+                );
+                if (file_exists($cookieJarFile)) {
+                    $command .= '--no-cookies ';
+                    $json = json_decode(file_get_contents($cookieJarFile), true);
+                    foreach($json as $host => $cookies) {
+                        foreach($cookies as $path => $values) {
+                            foreach($values as $cookie => $jar) {
+                                $command .= sprintf('--header "Cookie: %s=%s" ', $cookie, $jar['value']);
+                            }
+                        }
+                    }
+                }
+                continue;
             }
 
             switch (gettype($val)) {
