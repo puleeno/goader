@@ -125,13 +125,16 @@ abstract class Host implements HostInterface
     {
         if (empty($url)) {
             $url = $this->url;
+        } else {
+            $this->host = parse_url($url);
         }
         $options = array_merge($this->defaultHttpClientOptions(), $options);
+        $rawUri = isset($options['rawUri']) && $options['rawUri'];
         if ($client) {
             $this->createHttpClient($client);
         }
         try {
-            $res = $this->http_client->request($method, $url, $options);
+            $res = $this->http_client->request($method, $url, $options, $rawUri);
             $this->content = (string)$res->getBody();
         } catch (\Exception $e) {
             Logger::log(sprintf('Error when download #%d with URL %s', Environment::getCurrentIndex(), $url));
