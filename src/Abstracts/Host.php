@@ -4,7 +4,7 @@ namespace Puleeno\Goader\Abstracts;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use PHPHtmlParser\Dom;
-use Puleeno\Goader\Clients\Http\Cloudscraper;
+use Puleeno\Goader\Clients\Http\CloudScraper;
 use Puleeno\Goader\Clients\Downloader\Wget;
 use Puleeno\Goader\Command;
 use Puleeno\Goader\Environment;
@@ -76,7 +76,7 @@ abstract class Host implements HostInterface
             return;
         }
         if (!empty($this->useCloudScraper)) {
-            $this->http_client = new Cloudscraper($this->defaultHttpClientOptions());
+            $this->http_client = new CloudScraper($this->defaultHttpClientOptions());
         } else {
             $this->http_client = new Client($this->defaultHttpClientOptions());
         }
