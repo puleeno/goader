@@ -25,7 +25,8 @@ class CloudScraper implements ClientInterface
                 'method',
                 'cookies',
                 'formdata',
-                'saveto'
+                'saveto',
+                'headers',
             )
         );
     }
