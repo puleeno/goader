@@ -48,6 +48,11 @@ class CloudScraper implements ClientInterface
                 continue;
             }
 
+            if ($key === 'headers') {
+                $command .= sprintf(' --%s="%s"', $key, base64_encode(json_encode($val)));
+                continue;
+            }
+
             switch (gettype($val)) {
                 case 'array':
                 case 'object':
