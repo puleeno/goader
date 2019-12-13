@@ -129,7 +129,7 @@ abstract class Host implements HostInterface
             $this->host = parse_url($url);
         }
         $options = array_merge($this->defaultHttpClientOptions(), $options);
-        $rawUri = isset($options['rawUri']) && $options['rawUri'];
+        $rawUri = !isset($options['rawUri']) || $options['rawUri'];
         if ($client) {
             $this->createHttpClient($client);
         }
