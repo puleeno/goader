@@ -25,6 +25,10 @@ class Wget
 
     public function getContent($url, $fileName)
     {
+        $fileNameArr = parse_url($fileName);
+        if (count($fileNameArr) > 1) {
+            $fileName = $fileNameArr['path'];
+        }
         $command = $this->buildCommand($url, array_merge($this->options, [
             'O' => $fileName,
             'quiet' => true,
