@@ -92,63 +92,35 @@ class Kuaikanmanhua extends Host
         Logger::log('The manga is downloaded successfully!!');
     }
 
-    public function preparingJsonStr($str)
+
+    public function getImagesFromJsonStr($strImages)
     {
-        $json = $str;
-        $pos = strpos($str, 'return');
-        $searchPatterns = array();
-        $replaces = array();
+        $images = array();
 
-        if (is_numeric($pos)) {
-            $json = substr($str, 0, $pos);
-            $json = rtrim($json, ';');
-            $json .= '}';
-            $searchPatterns = array(
-                '/\w\[(\d{1,})\]="/',
-                '/";/'
-            );
-            $replaces = array(
-                '"$1": "',
-                '",'
-            );
-        } else {
-            $searchPatterns = array(
-                '/(width|height):[^,]*,\n?/',
-                '/(url)/'
-            );
-            $replaces = array('', '"$1"');
+        if (preg_match_all('/(https\:[^\"]+)/', $strImages, $matches)) {
+            foreach($matches[0] as $imageUrl) {
+                $imageUrl = json_decode('"' . $imageUrl . '"');
+                if (!$imageUrl) {
+                    continue;
+                }
+                array_push($images, $imageUrl);
+            }
         }
-
-        $json = preg_replace($searchPatterns, $replaces, $json);
-        return $json;
-    }
-
-    public function getImagesFromJsonStr($strJson)
-    {
-        $strJson = $this->preparingJsonStr($strJson);
-        $json = json_decode($strJson, true);
-
-        if (count($json) < 1) {
-            return [];
-        }
-        $images = [];
-        foreach ($json as $image) {
-            $images[] = $image['url'];
-        }
-
         return $images;
     }
 
     public function getChapterImagePattern()
     {
-        return '/__NUXT__=\(function\([^\)]*\)\{return.+comicImages:(\[[^\]]*])/';
+        return '/serverRendered\:e\}\}\((.+)Array\(/';
     }
 
     public function downloadChapter()
     {
         $this->content = (string)$this->getContent();
+
         if (!preg_match($this->getChapterImagePattern(), $this->content, $matches)) {
             Logger::log(sprintf('Occur error when download chapter has URL %s', $this->url));
+            return;
         }
 
         $images = $this->getImagesFromJsonStr($matches[1]);
