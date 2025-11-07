@@ -34,7 +34,12 @@
 
         {% if site.search_enabled %}
           <div class="search">
-            {% include components/search.html %}
+            <div class="search-input-wrap">
+              <label class="search-label" for="search-input">Tìm kiếm</label>
+              <input class="search-input" id="search-input" type="search" name="search" placeholder="Tìm trong tài liệu" autocomplete="off" data-search-input>
+              <span class="search-icon" aria-hidden="true"></span>
+            </div>
+            <div class="search-results" data-search-results role="status"></div>
           </div>
         {% endif %}
 
