@@ -1,5 +1,4 @@
----
-layout: goader
+layout: default
 title: Hướng dẫn sử dụng
 nav_order: 1
 ---

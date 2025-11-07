@@ -1,4 +1,5 @@
-layout: goader
+---
+layout: default
 title: Tổng quan
 nav_order: 0
 ---
