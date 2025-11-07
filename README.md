@@ -22,5 +22,7 @@ The command line downloader
 
 - [Hướng dẫn sử dụng](docs/user-guide.md)
 - [Hướng dẫn developer](docs/DEVELOPERS.md)
+- [Máy chủ được hỗ trợ](docs/host-support.md)
+- [Phát triển host mới](docs/host-development.md)
 
 # Plugins

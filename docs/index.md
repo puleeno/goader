@@ -10,6 +10,8 @@ Goader là bộ công cụ dòng lệnh giúp tải nội dung từ nhiều host
 
 - **Sổ tay sử dụng:** Xem hướng dẫn chi tiết cho từng lệnh trong mục [Hướng dẫn sử dụng]({{ '/user-guide' | relative_url }}).
 - **Dành cho developer:** Khám phá kiến trúc, hook và quy trình viết plugin ở mục [Hướng dẫn developer]({{ '/DEVELOPERS' | relative_url }}).
+- **Danh sách host:** Kiểm tra các host có sẵn tại [Máy chủ được hỗ trợ]({{ '/host-support' | relative_url }}).
+- **Mở rộng host:** Xem quy trình thêm downloader mới tại [Phát triển host mới]({{ '/host-development' | relative_url }}).
 
 > Bạn có thể dùng ô tìm kiếm (góc trên cùng bên phải) để tra nhanh theo từ khóa.
 

@@ -7,5 +7,4 @@ heading_anchors: true
 aux_links:
   "Goader trên GitHub":
     - https://github.com/puleeno/goader
-footer_content: "&copy; {{ site.time | date: '%Y' }} Goader CLI"
 
