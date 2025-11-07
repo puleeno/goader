@@ -26,6 +26,7 @@ Các lệnh chính:
 
 - Cú pháp: `goader download [tùy chọn] <URL>` hoặc `goader <URL>`
 - Nhiệm vụ: Xác định host tương ứng, khởi chạy client và tải toàn bộ tài nguyên.
+- Có thể truyền đường dẫn tới tệp văn bản chứa danh sách URL (mỗi dòng một URL, cho phép bỏ qua dòng rỗng hoặc dòng bắt đầu bằng `#`). Goader sẽ tải lần lượt từng URL: `goader download file_list.txt`.
 
 Tùy chọn:
 
