@@ -1,3 +1,8 @@
+layout: goader
+title: Hướng dẫn sử dụng
+nav_order: 1
+---
+
 Goader command line downloader
 ==============================
 

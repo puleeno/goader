@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      {% if page.title %}{{ page.title }} · {% endif %}{{ site.title | escape }}
+    </title>
+
+    {% if site.description %}
+      <meta name="description" content="{{ site.description | strip_newlines | escape }}">
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ '/assets/css/just-the-docs-default.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/just-the-docs-dark.css' | relative_url }}" media="(prefers-color-scheme: dark)">
+
+    {% if site.head_scripts %}
+      {% for script in site.head_scripts %}
+        <script src="{{ script | relative_url }}"></script>
+      {% endfor %}
+    {% endif %}
+  </head>
+  <body class="layout--default" data-color-scheme="{{ site.color_scheme | default: 'dark' }}">
+    <div class="page-wrap">
+      <aside class="side-bar" role="navigation">
+        <div class="site-header">
+          <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+          {% if site.description %}
+            <p class="site-subtitle">{{ site.description }}</p>
+          {% endif %}
+        </div>
+
+        {% if site.search_enabled %}
+          <div class="search">
+            {% include components/search.html %}
+          </div>
+        {% endif %}
+
+        {% assign nav_pages = site.pages | where_exp: "item", "item.nav_order" | sort: 'nav_order' %}
+        {% if nav_pages.size > 0 %}
+          <nav class="navigation">
+            <ul class="nav-list">
+              {% for item in nav_pages %}
+                {% unless item.exclude_from_nav %}
+                  <li class="nav-list-item{% if item.url == page.url %} active{% endif %}">
+                    <a class="nav-list-link" href="{{ item.url | relative_url }}">{{ item.title | default: item.name }}</a>
+                  </li>
+                {% endunless %}
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+
+        {% if site.aux_links %}
+          <div class="aux-nav">
+            <h3 class="aux-nav-title">Liên kết</h3>
+            <ul class="aux-nav-list">
+              {% for label in site.aux_links %}
+                {% assign link = site.aux_links[label] %}
+                <li class="aux-nav-item">
+                  <a class="aux-nav-link" href="{{ link[0] }}" target="_blank" rel="noopener">{{ label }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </aside>
+
+      <main class="main-content" role="main">
+        <section class="page-header">
+          <h1 class="page-title">{{ page.title | default: site.title }}</h1>
+          {% if page.description %}
+            <p class="page-description">{{ page.description }}</p>
+          {% endif %}
+        </section>
+
+        <div class="page-content">
+          {{ content }}
+        </div>
+
+        <footer class="site-footer">
+          <div class="site-footer-owner">{{ site.footer_content | markdownify }}</div>
+        </footer>
+      </main>
+    </div>
+
+    <script src="{{ '/assets/js/just-the-docs.js' | relative_url }}"></script>
+    {% if site.footer_scripts %}
+      {% for script in site.footer_scripts %}
+        <script src="{{ script | relative_url }}"></script>
+      {% endfor %}
+    {% endif %}
+  </body>
+</html>
+

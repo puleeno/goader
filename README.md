@@ -18,4 +18,9 @@ The command line downloader
 - [x] Photoshop extract layers
 - [x] File rename tool
 
+# Tài liệu
+
+- [Hướng dẫn sử dụng](docs/README.md)
+- [Hướng dẫn developer](docs/DEVELOPERS.md)
+
 # Plugins
