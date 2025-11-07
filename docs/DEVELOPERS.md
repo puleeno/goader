@@ -16,7 +16,7 @@ Tài liệu này dành cho developer muốn mở rộng hoặc bảo trì Goader
 - Khi chạy, `Goader::run()` kích hoạt chuỗi hook `goader_init` rồi `goader_run`. Plugin sử dụng hook này để đăng ký lệnh, cấu hình, hành vi bổ sung.
 - `_run()` trong `Goader` đọc tham số CLI (`Environment::getCommandArgs()`), áp dụng filter `register_goader_command` để tìm callable thực thi lệnh. Nếu không có lệnh hợp lệ, thông báo lỗi.
 
-## Dòng chảy CLI và lớp cốt lõi
+## CLI flow và core class
 
 - `Command` bọc thư viện [`Commando`](https://github.com/nategood/commando) để quản lý tham số/tùy chọn CLI. Sử dụng `Command::getCommand()` để truy cập instance hiện tại.
 - `Environment` cung cấp thông tin về thư mục cài đặt (`getGoaderDir()`), thư mục cấu hình người dùng (`getUserGoaderDir()`), thư mục làm việc (`getWorkDir()`), v.v. Trên Windows thư mục người dùng là `%HOMEDRIVE%%HOMEPATH%/Goader`, trên Unix là `~/.goader`.
