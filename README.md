@@ -20,7 +20,7 @@ The command line downloader
 
 # Tài liệu
 
-- [Hướng dẫn sử dụng](docs/README.md)
+- [Hướng dẫn sử dụng](docs/user-guide.md)
 - [Hướng dẫn developer](docs/DEVELOPERS.md)
 
 # Plugins
